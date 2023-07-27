@@ -1,0 +1,16 @@
+syntax = "proto2";
+package douyin.extra.first;
+option go_package = "./extra_first;extra_first";
+import "comment_action.proto";
+message douyin_comment_list_request {
+  required string token = 1; // 用户鉴权token
+  required int64 video_id = 2; // 视频id
+}
+
+message douyin_comment_list_response {
+  required int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  optional string status_msg = 2; // 返回状态描述
+  repeated Comment comment_list = 3; // 评论列表
+}
+
+

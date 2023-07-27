@@ -1,0 +1,19 @@
+syntax = "proto2";
+package douyin.extra.second;
+option go_package = "../extra_second;extra_second";
+message douyin_relation_friend_list_request {
+  required int64 user_id = 1; // 用户id
+  required string token = 2; // 用户鉴权token
+}
+
+message douyin_relation_friend_list_response {
+  required int32 status_code = 1; // 状态码，0-成功，其他值-失败
+  optional string status_msg = 2; // 返回状态描述
+  repeated FriendUser user_list = 3; // 用户列表
+}
+
+
+message FriendUser {
+    optional string message = 1; // 和该好友的最新聊天消息
+    required int64 msgType = 2; // message消息的类型，0 => 当前请求用户接收的消息， 1 => 当前请求用户发送的消息
+}
