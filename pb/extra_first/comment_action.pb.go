@@ -4,10 +4,10 @@
 // 	protoc        v4.23.1
 // source: comment_action.proto
 
-package extra_first
+package pb
 
 import (
-	core "tiktok_project/core"
+	core "tiktok_project/pb/core"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"

@@ -4,7 +4,7 @@
 // 	protoc        v4.23.1
 // source: comment_list.proto
 
-package extra_first
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

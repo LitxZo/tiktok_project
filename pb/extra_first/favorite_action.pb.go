@@ -4,7 +4,7 @@
 // 	protoc        v4.23.1
 // source: favorite_action.proto
 
-package extra_first
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

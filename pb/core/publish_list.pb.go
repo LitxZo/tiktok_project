@@ -4,7 +4,7 @@
 // 	protoc        v4.23.1
 // source: publish_list.proto
 
-package core
+package pb
 
 import (
 	

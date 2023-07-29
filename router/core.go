@@ -1,0 +1,41 @@
+package router
+
+import (
+	"net/http"
+	"tiktok_project/api"
+
+	"github.com/gin-gonic/gin"
+)
+
+func InitCoreRouter() {
+	RegistRouter(func(rg *gin.RouterGroup) {
+		rg.GET("/feed", func(ctx *gin.Context) {
+			ctx.JSON(http.StatusAccepted, gin.H{
+				"msg": "feed success",
+			})
+		})
+		rg.GET("/user/", func(ctx *gin.Context) {
+			ctx.JSON(http.StatusAccepted, gin.H{
+				"msg": "userInfo success",
+			})
+		})
+		userGroup := rg.Group("/user")
+		userGroup.POST("/register", func(ctx *gin.Context) {
+			ctx.JSON(http.StatusAccepted, gin.H{
+				"msg": "regist success",
+			})
+		})
+		userGroup.POST("/login/", api.Login)
+		publishGroup := rg.Group("/publish")
+		publishGroup.POST("/action", func(ctx *gin.Context) {
+			ctx.JSON(http.StatusAccepted, gin.H{
+				"msg": "publishAction success",
+			})
+		})
+		publishGroup.GET("/list/", func(ctx *gin.Context) {
+			ctx.JSON(http.StatusAccepted, gin.H{
+				"msg": "publishList success",
+			})
+		})
+	})
+}

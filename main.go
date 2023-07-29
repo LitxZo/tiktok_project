@@ -1,15 +1,11 @@
 package main
 
-import (
-	"github.com/gin-gonic/gin"
-)
+import "tiktok_project/cmd"
 
 func main() {
-	router := gin.Default()
-	router.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "hello world",
-		})
-	})
-	router.Run(":9999")
+
+	defer cmd.Close()
+
+	cmd.Start()
+
 }

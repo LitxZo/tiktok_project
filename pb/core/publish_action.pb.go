@@ -4,8 +4,7 @@
 // 	protoc        v4.23.1
 // source: publish_action.proto
 
-package core
-
+package pb
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"

@@ -1,0 +1,9 @@
+Server:
+  port: 9999
+  rootgroup: "/douyin"
+
+Log:
+  maxSize: 100 # 日志文件最大尺寸（M）
+  maxBackups: 10 # 保留旧文件的最大个数
+  maxAge: 10 # 保留旧文件的最大天数
+  developMode: true

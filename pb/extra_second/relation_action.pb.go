@@ -4,7 +4,7 @@
 // 	protoc        v4.23.1
 // source: relation_action.proto
 
-package extra_second
+package pb
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"

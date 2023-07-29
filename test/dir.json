@@ -1,0 +1,16 @@
+{
+    "text": "src",
+    "children": [
+        {"text":"api"},  
+        {"text":"cmd"},
+        {"text":"conf"},
+        {"text":"dao"},
+        {"text":"global"},
+        {"text":"log"},
+        {"text":"middleware"},
+        {"text":"model"},
+        {"text":"router"},
+        {"text":"service", "children":[{"text":"dto"}]},
+        {"text":"utils"}
+    ]
+}
