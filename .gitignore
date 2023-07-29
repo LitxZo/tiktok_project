@@ -3,8 +3,7 @@
 /log
 *.log
  
-# 忽略/dist目录，相对.gitignore文件所在目录
-/dist
+
  
 
 # 忽略IDE的配置文件
