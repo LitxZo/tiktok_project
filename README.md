@@ -10,4 +10,16 @@
 - router：路由
 - service：服务相关
 - utils：工具
+
+## 下载依赖
+```
+go mod tidy
+```
+
+## 运行项目
+```
+go run main.go
+```
   
+
+### github项目地址：https://github.com/LitxZo/tiktok_project.git
