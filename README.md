@@ -1,5 +1,5 @@
 ## 目录结构说明
-- api：相当于controlleer，处理web请求
+- api：相当于controller，处理web请求
 - cmd：启动项目的相关命令
 - conf：系统配置相关
 - dao：数据库处理相关
