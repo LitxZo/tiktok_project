@@ -9,6 +9,8 @@ import (
 	"gorm.io/gorm"
 )
 
+//  这个文件放各种自定义验证
+
 func InitBaseValidator() {
 	initUserRegistValidator()
 }
@@ -18,7 +20,7 @@ func initUserRegistValidator() {
 		v.RegisterValidation("is_unique", func(fl validator.FieldLevel) bool {
 			if value, ok := fl.Field().Interface().(string); ok {
 				var user model.User
-				err := global.DB.Model(&user).Where("name = ?", value).First(&user).Error
+				err := global.DB.Model(&user).Where("user_name = ?", value).First(&user).Error
 				if err == gorm.ErrRecordNotFound {
 					return true
 				}
