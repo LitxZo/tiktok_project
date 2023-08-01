@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"tiktok_project/model"
 	"time"
 
 	"github.com/spf13/viper"
@@ -18,5 +19,7 @@ func InitDB() (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	sqlDB.SetMaxIdleConns(viper.GetInt("DB.maxIdleConns"))
 	sqlDB.SetMaxOpenConns(viper.GetInt("DB.maxOpenConns"))
+
+	db.AutoMigrate(&model.User{})
 	return db, nil
 }

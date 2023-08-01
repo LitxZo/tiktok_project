@@ -10,8 +10,8 @@ import "gorm.io/gorm"
 //	}
 type User struct {
 	gorm.Model
-	Id              int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty"`                                                 // 用户id
-	Name            string `protobuf:"bytes,2,req,name=name" json:"name,omitempty"`                                              // 用户名称
+	Id              int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty" gorm:"not null;primary_key;auto_increment"`      // 用户id
+	Name            string `protobuf:"bytes,2,req,name=name" json:"name,omitempty" gorm:"size:64; not null"`                     // 用户名称
 	FollowCount     int64  `protobuf:"varint,3,opt,name=follow_count,json=followCount" json:"follow_count,omitempty"`            // 关注总数
 	FollowerCount   int64  `protobuf:"varint,4,opt,name=follower_count,json=followerCount" json:"follower_count,omitempty"`      // 粉丝总数
 	Avatar          string `protobuf:"bytes,6,opt,name=avatar" json:"avatar,omitempty"`                                          //用户头像
@@ -20,12 +20,12 @@ type User struct {
 	TotalFavorited  int64  `protobuf:"varint,9,opt,name=total_favorited,json=totalFavorited" json:"total_favorited,omitempty"`   //获赞数量
 	WorkCount       int64  `protobuf:"varint,10,opt,name=work_count,json=workCount" json:"work_count,omitempty"`                 //作品数量
 	FavoriteCount   int64  `protobuf:"varint,11,opt,name=favorite_count,json=favoriteCount" json:"favorite_count,omitempty"`     //点赞数量
-	Password        string `protobuf:"bytes,2,req,name=password" json:"password,omitempty"`                                      //密码
+	Password        string `protobuf:"bytes,2,req,name=password" json:"password,omitempty" gorm:"size:128; not null"`            //密码
 }
 
 type Video struct {
 	gorm.Model
-	Id            int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty"`                                            // 视频唯一标识
+	Id            int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty" gorm:"not null;primary_key;auto_increment"` // 视频唯一标识
 	PlayUrl       string `protobuf:"bytes,3,req,name=play_url,json=playUrl" json:"play_url,omitempty"`                    // 视频播放地址
 	CoverUrl      string `protobuf:"bytes,4,req,name=cover_url,json=coverUrl" json:"cover_url,omitempty"`                 // 视频封面地址
 	FavoriteCount int64  `protobuf:"varint,5,req,name=favorite_count,json=favoriteCount" json:"favorite_count,omitempty"` // 视频的点赞总数
