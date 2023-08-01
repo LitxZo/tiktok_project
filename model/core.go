@@ -11,7 +11,7 @@ import "gorm.io/gorm"
 type User struct {
 	gorm.Model
 	Id              int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty" gorm:"not null;primary_key;auto_increment"`      // 用户id
-	Name            string `protobuf:"bytes,2,req,name=name" json:"name,omitempty" gorm:"size:64; not null"`                     // 用户名称
+	Name            string `protobuf:"bytes,2,req,name=name" json:"name,omitempty" gorm:"size:64; not null;unique"`              // 用户名称
 	FollowCount     int64  `protobuf:"varint,3,opt,name=follow_count,json=followCount" json:"follow_count,omitempty"`            // 关注总数
 	FollowerCount   int64  `protobuf:"varint,4,opt,name=follower_count,json=followerCount" json:"follower_count,omitempty"`      // 粉丝总数
 	Avatar          string `protobuf:"bytes,6,opt,name=avatar" json:"avatar,omitempty"`                                          //用户头像
@@ -35,4 +35,8 @@ type Video struct {
 
 	User     User   `gorm:"foreignKey:AutorId"`
 	AuthorId string `protobuf:"varint,1,req,name=author_id" json:"author_id,omitempty"`
+}
+
+func (u User) GetTableName() string {
+	return "users"
 }

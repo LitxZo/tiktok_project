@@ -2,36 +2,43 @@ package api
 
 import (
 	"fmt"
-	"tiktok_project/model"
+	"net/http"
+	"tiktok_project/service"
+	"tiktok_project/service/dto"
 
 	"github.com/gin-gonic/gin"
 )
 
-type DouyinUserResponse struct {
-	StatusCode int32      `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string     `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`     // 返回状态描述
-	User       model.User `protobuf:"bytes,3,req,name=user" json:"user,omitempty"`                                // 用户信息
+type UserApi struct{}
+
+func NewUserApi() UserApi {
+	return UserApi{}
 }
 
-type DouyinserRequest struct {
-	UserId *int64 `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"` // 用户id
-	Token  string `protobuf:"bytes,2,req,name=token" json:"token,omitempty"`                  // 用户鉴权token
-}
+func (m UserApi) UserRegister(ctx *gin.Context) {
+	var req dto.DouyinUserRegisterRequest
+	err1 := ctx.ShouldBindQuery(&req)
+	if err1 != nil {
+		ctx.JSON(http.StatusOK, dto.RegisterErrResponse(err1))
+		return
+	}
+	id, err2 := service.UserRegisterService(req.Username, req.Password)
+	if err2 != nil {
+		ctx.JSON(http.StatusOK, dto.RegisterErrResponse(err2))
+		return
+	}
+	resp, err3 := dto.GenerateRegisterResponse(id)
+	if err3 != nil {
+		ctx.JSON(http.StatusOK, dto.RegisterErrResponse(err3))
+		return
+	}
 
-type DouyinUserLoginRequest struct {
-	Username string `protobuf:"bytes,1,req,name=username" json:"username,omitempty" form:"username"` // 登录用户名
-	Password string `protobuf:"bytes,2,req,name=password" json:"password,omitempty" form:"password"` // 登录密码
-}
+	ctx.JSON(http.StatusOK, resp)
 
-type DouyinUserLoginResponse struct {
-	StatusCode int32  `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`     // 返回状态描述
-	UserId     int64  `protobuf:"varint,3,req,name=user_id,json=userId" json:"user_id,omitempty"`             // 用户id
-	Token      string `protobuf:"bytes,4,req,name=token" json:"token,omitempty"`                              // 用户鉴权token
 }
 
 var Login gin.HandlerFunc = func(ctx *gin.Context) {
-	var req DouyinUserLoginRequest
+	var req dto.DouyinUserLoginRequest
 	err := ctx.ShouldBindQuery(&req)
 	if err != nil {
 		panic(fmt.Sprintf("Login err: %s", err.Error()))

@@ -1,6 +1,6 @@
 Server:
   port: 9999
-  rootgroup: "/douyin"
+  rootgroup: /douyin
 
 Log:
   maxSize: 100 # 日志文件最大尺寸（M）
@@ -9,9 +9,10 @@ Log:
   developMode: true
 
 DB:
-  dsn : "root:shouwangpigu233@tcp(127.0.0.1:3306)/tiktok_project?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn : root:shouwangpigu233@tcp(127.0.0.1:3306)/tiktok_project?charset=utf8mb4&parseTime=True&loc=Local
   maxIdleConns : 10 # 最大空闲连接数
   maxOpenConns : 10 # 最大打开连接数
   
 Token:
   expiresTime : 30 #token 过期时间（分钟）
+  signedKey : tiktok_project.cn # 签名密钥

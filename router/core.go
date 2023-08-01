@@ -8,6 +8,7 @@ import (
 )
 
 func InitCoreRouter() {
+	userApi := api.NewUserApi()
 	RegistRouter(func(rg *gin.RouterGroup) {
 		rg.GET("/feed", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusAccepted, gin.H{
@@ -20,11 +21,7 @@ func InitCoreRouter() {
 			})
 		})
 		userGroup := rg.Group("/user")
-		userGroup.POST("/register", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusAccepted, gin.H{
-				"msg": "regist success",
-			})
-		})
+		userGroup.POST("/register/", userApi.UserRegister)
 		userGroup.POST("/login/", api.Login)
 		publishGroup := rg.Group("/publish")
 		publishGroup.POST("/action", func(ctx *gin.Context) {
@@ -37,5 +34,6 @@ func InitCoreRouter() {
 				"msg": "publishList success",
 			})
 		})
+
 	})
 }

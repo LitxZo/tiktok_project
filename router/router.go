@@ -43,19 +43,16 @@ func InitRouter() {
 
 	//初始化基础路由，将需要注册的路由都存入 gfnRouters 数组中。
 	InitBaseRouters()
+	// 注册gfnRouters里的路由
 	for _, fn := range gfnRouters {
 		fn(rootgroup)
 	}
-	routers := r.Routes()
-	for _, v := range routers {
-		fmt.Println(v.Path)
-	}
-
+	// 新建http服务
 	server := &http.Server{
 		Addr:    port,
 		Handler: r,
 	}
-
+	// 新建go协程开启服务
 	go func() {
 		global.Logger.Info("Starting Listen port ", port)
 		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -63,7 +60,8 @@ func InitRouter() {
 			return
 		}
 	}()
-
+	// 初始化自定义验证器
+	InitBaseValidator()
 	<-ctx.Done()
 
 	ctx, cancelShutDown := context.WithTimeout(context.Background(), 5*time.Second)
