@@ -60,6 +60,7 @@ func InitRouter() {
 			return
 		}
 	}()
+
 	// 初始化自定义验证器
 	InitBaseValidator()
 	<-ctx.Done()

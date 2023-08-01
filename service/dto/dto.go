@@ -1,8 +1,6 @@
 package dto
 
 import (
-	"encoding/json"
-	"fmt"
 	"tiktok_project/utils"
 
 	"github.com/gin-gonic/gin"
@@ -45,8 +43,8 @@ type DouyinUserLoginResponse struct {
 }
 
 type DouyinUserRegisterRequest struct {
-	Username string `protobuf:"bytes,1,req,name=username" json:"username,omitempty" form:"username" binding:"required"` // 注册用户名，最长32个字符
-	Password string `protobuf:"bytes,2,req,name=password" json:"password,omitempty" form:"password" binding:"required"` // 密码，最长32个字符
+	Username string `protobuf:"bytes,1,req,name=username" json:"username,omitempty" form:"username" binding:"required,email"` // 注册用户名，最长32个字符
+	Password string `protobuf:"bytes,2,req,name=password" json:"password,omitempty" form:"password" binding:"required"`       // 密码，最长32个字符
 }
 
 type DouyinUserRegisterResponse struct {
@@ -72,10 +70,10 @@ func RegisterErrResponse(err error) gin.H {
 		"token":       "",
 	}
 }
-func GenerateLoginResponse(id int) ([]byte, error) {
+func GenerateLoginResponse(id int) (DouyinUserLoginResponse, error) {
 	token, err1 := utils.GenerateToken(id)
 	if err1 != nil {
-		return nil, err1
+		return DouyinUserLoginResponse{}, err1
 	}
 	resp := DouyinUserLoginResponse{
 		StatusCode: 0,
@@ -83,11 +81,8 @@ func GenerateLoginResponse(id int) ([]byte, error) {
 		UserId:     int64(id),
 		Token:      token,
 	}
-	respJson, err2 := json.Marshal(resp)
-	if err2 != nil {
-		return nil, err2
-	}
-	return respJson, nil
+
+	return resp, nil
 
 }
 
@@ -102,8 +97,6 @@ func GenerateRegisterResponse(id int) (DouyinUserRegisterResponse, error) {
 		UserId:     int64(id),
 		Token:      token,
 	}
-
-	fmt.Println(resp)
 
 	return resp, nil
 

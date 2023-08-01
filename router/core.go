@@ -22,7 +22,7 @@ func InitCoreRouter() {
 		})
 		userGroup := rg.Group("/user")
 		userGroup.POST("/register/", userApi.UserRegister)
-		userGroup.POST("/login/", api.Login)
+		userGroup.POST("/login/", userApi.UserLogin)
 		publishGroup := rg.Group("/publish")
 		publishGroup.POST("/action", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusAccepted, gin.H{

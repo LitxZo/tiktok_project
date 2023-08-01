@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"tiktok_project/service"
 	"tiktok_project/service/dto"
@@ -17,17 +16,17 @@ func NewUserApi() UserApi {
 
 func (m UserApi) UserRegister(ctx *gin.Context) {
 	var req dto.DouyinUserRegisterRequest
-	err1 := ctx.ShouldBindQuery(&req)
+	err1 := ctx.ShouldBindQuery(&req) // 将请求与给定的格式进行绑定
 	if err1 != nil {
 		ctx.JSON(http.StatusOK, dto.RegisterErrResponse(err1))
 		return
 	}
-	id, err2 := service.UserRegisterService(req.Username, req.Password)
+	id, err2 := service.UserRegisterService(req.Username, req.Password) // 调用register服务
 	if err2 != nil {
 		ctx.JSON(http.StatusOK, dto.RegisterErrResponse(err2))
 		return
 	}
-	resp, err3 := dto.GenerateRegisterResponse(id)
+	resp, err3 := dto.GenerateRegisterResponse(id) //生成对应格式的response，所有的response格式都存在service.dto中
 	if err3 != nil {
 		ctx.JSON(http.StatusOK, dto.RegisterErrResponse(err3))
 		return
@@ -37,19 +36,20 @@ func (m UserApi) UserRegister(ctx *gin.Context) {
 
 }
 
-var Login gin.HandlerFunc = func(ctx *gin.Context) {
+func (m UserApi) UserLogin(ctx *gin.Context) {
 	var req dto.DouyinUserLoginRequest
-	err := ctx.ShouldBindQuery(&req)
-	if err != nil {
-		panic(fmt.Sprintf("Login err: %s", err.Error()))
+	err1 := ctx.ShouldBindQuery(&req)
+	if err1 != nil {
+		ctx.JSON(http.StatusOK, dto.LoginErrResponse(err1))
 	}
-	fmt.Println(req.Username, req.Password)
-	if req.Username == "1" && req.Password == "123456" {
-		ctx.JSON(200, gin.H{
-			"status_code": 0,
-			"status_msg":  "login success",
-			"user_id":     0,
-			"token":       "yes",
-		})
+	id, err2 := service.UserLoginService(req.Username, req.Password)
+	if err2 != nil {
+		ctx.JSON(http.StatusOK, dto.LoginErrResponse(err2))
 	}
+	resp, err3 := dto.GenerateLoginResponse(id)
+	if err3 != nil {
+		ctx.JSON(http.StatusOK, dto.RegisterErrResponse(err3))
+		return
+	}
+	ctx.JSON(http.StatusOK, resp)
 }
