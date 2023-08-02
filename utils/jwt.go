@@ -2,6 +2,7 @@ package utils
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -9,17 +10,20 @@ import (
 )
 
 type JwtUserClaim struct {
-	ID int
+	ID   int
+	time time.Time
 	jwt.RegisteredClaims
 }
 
 var signedKey = []byte(viper.GetString("Token.signedKey"))
 
-func GenerateToken(id int) (string, error) {
+func GenerateToken(id int, t time.Time) (string, error) {
+	expiresTime := viper.GetInt("Token.expiresTime")
 	claim := JwtUserClaim{
-		ID: id,
+		ID:   id,
+		time: t,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(viper.GetDuration("Token.expiresTime") * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(expiresTime) * time.Minute)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			Subject:   "Token",
 		},
@@ -42,11 +46,11 @@ func ParseToken(tokenStr string) (JwtUserClaim, error) {
 
 func TokenIsValid(tokenStr string) bool {
 	claim := JwtUserClaim{}
-	token, err := jwt.ParseWithClaims(tokenStr, &claim, func(t *jwt.Token) (interface{}, error) {
+	_, err := jwt.ParseWithClaims(tokenStr, &claim, func(t *jwt.Token) (interface{}, error) {
 		return signedKey, nil
 	})
-	if err != nil && token.Valid {
-		return false
+	if err != nil {
+		fmt.Println(err.Error())
 	}
-	return true
+	return err == nil
 }

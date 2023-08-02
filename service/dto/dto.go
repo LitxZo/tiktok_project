@@ -1,8 +1,6 @@
 package dto
 
 import (
-	"tiktok_project/utils"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -26,8 +24,8 @@ type DouyinUserResponse struct {
 }
 
 type DouyinUserRequest struct {
-	UserId int64  `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"` // 用户id
-	Token  string `protobuf:"bytes,2,req,name=token" json:"token,omitempty"`                  // 用户鉴权token
+	UserId string `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty" form:"user_id"` // 用户id
+	Token  string `protobuf:"bytes,2,req,name=token" json:"token,omitempty" form:"token"`                    // 用户鉴权token
 }
 
 type DouyinUserLoginRequest struct {
@@ -54,50 +52,9 @@ type DouyinUserRegisterResponse struct {
 	Token      string `protobuf:"bytes,4,req,name=token" json:"token,omitempty"`                              // 用户鉴权token
 }
 
-func LoginErrResponse(err error) gin.H {
+func ErrResponse(err error, context string) gin.H {
 	return gin.H{
 		"status_code": 1,
-		"status_msg":  "Login Error:" + err.Error(),
-		"user_id":     0,
-		"token":       "",
+		"status_msg":  context + "Error:" + err.Error(),
 	}
-}
-func RegisterErrResponse(err error) gin.H {
-	return gin.H{
-		"status_code": 1,
-		"status_msg":  "Register Error:" + err.Error(),
-		"user_id":     0,
-		"token":       "",
-	}
-}
-func GenerateLoginResponse(id int) (DouyinUserLoginResponse, error) {
-	token, err1 := utils.GenerateToken(id)
-	if err1 != nil {
-		return DouyinUserLoginResponse{}, err1
-	}
-	resp := DouyinUserLoginResponse{
-		StatusCode: 0,
-		StatusMsg:  "Login Success",
-		UserId:     int64(id),
-		Token:      token,
-	}
-
-	return resp, nil
-
-}
-
-func GenerateRegisterResponse(id int) (DouyinUserRegisterResponse, error) {
-	token, err1 := utils.GenerateToken(id)
-	if err1 != nil {
-		return DouyinUserRegisterResponse{}, err1
-	}
-	resp := DouyinUserRegisterResponse{
-		StatusCode: 0,
-		StatusMsg:  "Regist Success",
-		UserId:     int64(id),
-		Token:      token,
-	}
-
-	return resp, nil
-
 }
