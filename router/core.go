@@ -9,12 +9,9 @@ import (
 
 func InitCoreRouter() {
 	userApi := api.NewUserApi()
+	videoApi := api.NewVideoApi()
 	RegistRouter(func(rg *gin.RouterGroup) {
-		rg.GET("/feed/", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusAccepted, gin.H{
-				"msg": "feed success",
-			})
-		})
+		rg.GET("/feed/", videoApi.FeedVideo)
 		rg.GET("/user/", userApi.UserInfo)
 		userGroup := rg.Group("/user")
 		userGroup.POST("/register/", userApi.UserRegister)
