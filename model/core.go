@@ -1,9 +1,6 @@
 package model
 
 import (
-	"database/sql/driver"
-	"encoding/json"
-
 	"gorm.io/gorm"
 )
 
@@ -15,20 +12,20 @@ import (
 //	}
 type User struct {
 	gorm.Model
-	Id              int64   `protobuf:"varint,1,req,name=id" json:"id,omitempty" gorm:"not null;primary_key;auto_increment"`                   // 用户id
-	UserName        string  `protobuf:"bytes,2,req,name=user_name" json:"user_name,omitempty" gorm:"size:64;not null;unique" validate:"email"` //用户登录名
-	Name            string  `protobuf:"bytes,3,req,name=name" json:"name,omitempty" gorm:"size:64; not null"`                                  // 用户名称
-	FollowCount     int64   `protobuf:"varint,4,opt,name=follow_count,json=followCount" json:"follow_count,omitempty"`                         // 关注总数
-	FollowerCount   int64   `protobuf:"varint,5,opt,name=follower_count,json=followerCount" json:"follower_count,omitempty"`                   // 粉丝总数
-	Avatar          string  `protobuf:"bytes,6,opt,name=avatar" json:"avatar,omitempty"`                                                       //用户头像
-	BackgroundImage string  `protobuf:"bytes,7,opt,name=background_image,json=backgroundImage" json:"background_image,omitempty"`              //用户个人页顶部大图
-	Signature       string  `protobuf:"bytes,8,opt,name=signature" json:"signature,omitempty"`                                                 //个人简介
-	TotalFavorited  int64   `protobuf:"varint,9,opt,name=total_favorited,json=totalFavorited" json:"total_favorited,omitempty"`                //获赞数量
-	WorkCount       int64   `protobuf:"varint,10,opt,name=work_count,json=workCount" json:"work_count,omitempty"`                              //作品数量
-	FavoriteCount   int64   `protobuf:"varint,11,opt,name=favorite_count,json=favoriteCount" json:"favorite_count,omitempty"`                  //点赞数量
-	Password        string  `protobuf:"bytes,12,req,name=password" json:"password,omitempty" gorm:"size:128; not null"`                        //密码
-	FollowId        IdGroup `protobuf:"bytes,13,opt,name=follow_id" jsopn:"follow_id,omitempty"`                                               //关注者id
-	FavoriteId      IdGroup `protobuf:"bytes,13,opt,name=favorite_id" jsopn:"favorite_id,omitempty"`
+	Id              int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty" gorm:"not null;primary_key;auto_increment"`                   // 用户id
+	UserName        string `protobuf:"bytes,2,req,name=user_name" json:"user_name,omitempty" gorm:"size:64;not null;unique" validate:"email"` //用户登录名
+	Name            string `protobuf:"bytes,3,req,name=name" json:"name,omitempty" gorm:"size:64; not null"`                                  // 用户名称
+	FollowCount     int64  `protobuf:"varint,4,opt,name=follow_count,json=followCount" json:"follow_count,omitempty"`                         // 关注总数
+	FollowerCount   int64  `protobuf:"varint,5,opt,name=follower_count,json=followerCount" json:"follower_count,omitempty"`                   // 粉丝总数
+	Avatar          string `protobuf:"bytes,6,opt,name=avatar" json:"avatar,omitempty"`                                                       //用户头像
+	BackgroundImage string `protobuf:"bytes,7,opt,name=background_image,json=backgroundImage" json:"background_image,omitempty"`              //用户个人页顶部大图
+	Signature       string `protobuf:"bytes,8,opt,name=signature" json:"signature,omitempty"`                                                 //个人简介
+	TotalFavorited  int64  `protobuf:"varint,9,opt,name=total_favorited,json=totalFavorited" json:"total_favorited,omitempty"`                //获赞数量
+	WorkCount       int64  `protobuf:"varint,10,opt,name=work_count,json=workCount" json:"work_count,omitempty"`                              //作品数量
+	FavoriteCount   int64  `protobuf:"varint,11,opt,name=favorite_count,json=favoriteCount" json:"favorite_count,omitempty"`                  //点赞数量
+	Password        string `protobuf:"bytes,12,req,name=password" json:"password,omitempty" gorm:"size:128; not null"`                        //密码
+	// FollowId        IdGroup `protobuf:"bytes,13,opt,name=follow_id" jsopn:"follow_id,omitempty"`                                           //关注者id
+	// FavoriteId      IdGroup `protobuf:"bytes,13,opt,name=favorite_id" jsopn:"favorite_id,omitempty"`
 }
 
 type Video struct {
@@ -41,21 +38,33 @@ type Video struct {
 	IsFavorite    bool   `protobuf:"varint,7,req,name=is_favorite,json=isFavorite" json:"is_favorite,omitempty"`          // true-已点赞，false-未点赞
 	Title         string `protobuf:"bytes,8,req,name=title" json:"title,omitempty"`                                       // 视频标题
 
-	User     User   `gorm:"foreignKey:AutorId"`
-	AuthorId string `protobuf:"varint,1,req,name=author_id" json:"author_id,omitempty"`
+	User     User  `gorm:"foreignKey:AutorId"`
+	AuthorId int64 `json:"author_id"`
+}
+
+type Comment struct {
+	Id         int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty"`                        // 视频评论id
+	Content    string `protobuf:"bytes,3,req,name=content" json:"content,omitempty"`               // 评论内容
+	CreateDate string `protobuf:"bytes,4,req,name=create_date,json=createDate" json:"create_date"` // 评论发布日期，格式 mm-dd
+	UserId     int64  `json:"user_id"`                                                             // 评论人id
+	VideoId    int64  `json:"video_id"`                                                            // 视频id
 }
 
 func (u User) GetTableName() string {
 	return "users"
 }
 
-type IdGroup []int64
-
-func (f *IdGroup) Scan(value interface{}) error {
-	v, _ := value.([]byte)
-	return json.Unmarshal(v, f)
+func (v Video) GetTableName() string {
+	return "videos"
 }
 
-func (f IdGroup) Value() (driver.Value, error) {
-	return json.Marshal(f)
-}
+// type IdGroup []int64
+
+// func (f *IdGroup) Scan(value interface{}) error {
+// 	v, _ := value.([]byte)
+// 	return json.Unmarshal(v, f)
+// }
+
+// func (f IdGroup) Value() (driver.Value, error) {
+// 	return json.Marshal(f)
+// }
