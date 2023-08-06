@@ -21,5 +21,6 @@ func InitDB() (*gorm.DB, error) {
 	sqlDB.SetMaxOpenConns(viper.GetInt("DB.maxOpenConns"))
 
 	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.Video{})
 	return db, nil
 }

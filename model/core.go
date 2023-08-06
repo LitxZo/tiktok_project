@@ -38,7 +38,7 @@ type Video struct {
 	IsFavorite    bool   `protobuf:"varint,7,req,name=is_favorite,json=isFavorite" json:"is_favorite,omitempty"`          // true-已点赞，false-未点赞
 	Title         string `protobuf:"bytes,8,req,name=title" json:"title,omitempty"`                                       // 视频标题
 
-	User     User  `gorm:"foreignKey:AutorId"`
+	User     User  `gorm:"foreignKey:Id; references:AuthorId"`
 	AuthorId int64 `json:"author_id"`
 }
 
@@ -46,9 +46,9 @@ type Comment struct {
 	Id         int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty"`                        // 视频评论id
 	Content    string `protobuf:"bytes,3,req,name=content" json:"content,omitempty"`               // 评论内容
 	CreateDate string `protobuf:"bytes,4,req,name=create_date,json=createDate" json:"create_date"` // 评论发布日期，格式 mm-dd
-	User       User   `gorm:"foreignKey:UserId"`
+	User       User   `gorm:"foreignKey:Id;referances:User"`
 	UserId     int64  `json:"user_id"` // 评论人id
-	Video      Video  `gorm:"foreignKey:VideoId"`
+	Video      Video  `gorm:"foreignKey:Id;referances:VideoId"`
 	VideoId    int64  `json:"video_id"` // 视频id
 }
 

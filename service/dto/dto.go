@@ -34,3 +34,10 @@ func ErrResponse(err error, context string) gin.H {
 		"status_msg":  context + "Error:" + err.Error(),
 	}
 }
+
+func SuccessResponse(context string) gin.H {
+	return gin.H{
+		"status_code": 0,
+		"status_msg":  context + "Success",
+	}
+}

@@ -35,10 +35,11 @@ func GenerateToken(id int, t time.Time) (string, error) {
 
 func ParseToken(tokenStr string) (JwtUserClaim, error) {
 	claim := JwtUserClaim{}
-	token, err := jwt.ParseWithClaims(tokenStr, &claim, func(t *jwt.Token) (interface{}, error) {
+	_, err := jwt.ParseWithClaims(tokenStr, &claim, func(t *jwt.Token) (interface{}, error) {
 		return signedKey, nil
 	})
-	if err != nil && token.Valid {
+	if err != nil {
+		fmt.Println(err.Error())
 		err = errors.New("invalid token")
 	}
 	return claim, err
