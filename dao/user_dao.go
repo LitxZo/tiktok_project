@@ -66,3 +66,12 @@ func bindUserDaoToDto(user model.User) dto.User {
 	userInfo.Signature = user.Signature
 	return userInfo
 }
+
+func SearchUserById(id int) (dto.User, error) {
+	var user model.User
+	err := global.DB.Table(user.GetTableName()).Where("user_id = ?", id).First(&user).Error
+	if err != nil {
+		return dto.User{}, err
+	}
+	return bindUserDaoToDto(user), nil
+}

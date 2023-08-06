@@ -2,13 +2,21 @@ package service
 
 import (
 	"tiktok_project/dao"
-	"tiktok_project/model"
+	"tiktok_project/service/dto"
 )
 
-func FeedVideoService() ([]model.Video, error) {
+func FeedVideoService() ([]dto.Video, error) {
 	videos, err := dao.FeedVideoDao()
 	if err != nil {
 		return nil, err
 	}
 	return videos, nil
+}
+
+func VideoPublish(filePath, title string) error {
+	err := dao.VideoPublishDao(filePath, title)
+	if err != nil {
+		return err
+	}
+	return nil
 }
