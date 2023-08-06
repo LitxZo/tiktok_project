@@ -31,6 +31,7 @@ func InitRouter() {
 
 	//初始化gin。
 	r := gin.Default()
+	r.StaticFS("/static", http.Dir("static"))
 
 	//从配置文件中读取port信息和路由根path信息。
 	port := ":" + viper.GetString("Server.port")
