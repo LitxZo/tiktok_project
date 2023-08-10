@@ -27,6 +27,7 @@ func InitCoreRouter() {
 
 		relationGroup := rg.Group("/relation")
 		relationGroup.POST("/action/", relationApi.RelationAction)
+		relationGroup.GET("/follow/list/", relationApi.RelationAction)
 
 	})
 }

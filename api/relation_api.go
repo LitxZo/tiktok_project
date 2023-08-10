@@ -14,6 +14,7 @@ func NewRelationApi() RelationApi {
 	return RelationApi{}
 }
 
+// 关注 和 取消关注
 func (m RelationApi) RelationAction(ctx *gin.Context) {
 	var req dto.DouyinRelationActionRequest
 	err := ctx.ShouldBindQuery(&req)
@@ -29,5 +30,24 @@ func (m RelationApi) RelationAction(ctx *gin.Context) {
 	} else {
 		ctx.JSON(http.StatusOK, dto.SuccessResponse("RelationAction"))
 	}
+}
+
+// 关注列表
+func (m RelationApi) FollowList(ctx *gin.Context) {
+	var req dto.DouyinRelationFollowListRequest
+	err := ctx.ShouldBindQuery(&req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowList"))
+		return
+	}
+
+	userList, err := service.RelationFollowListService(req.Token, req.UserId)
+
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowList"))
+		return
+	}
+	resp := dto.GenerateFollowListResponse(userList)
+	ctx.JSON(http.StatusOK, resp)
 
 }

@@ -4,13 +4,11 @@ import (
 	"errors"
 	"strconv"
 	"tiktok_project/dao"
+	"tiktok_project/service/dto"
 	"tiktok_project/utils"
 )
 
 func RelationActionService(token, toUserId, actionType string) error {
-	if !utils.TokenIsValid(token) {
-
-	}
 	userId, err := utils.ParseTokenForId(token)
 	if err != nil {
 		return errors.New("Token 不合法")
@@ -21,5 +19,20 @@ func RelationActionService(token, toUserId, actionType string) error {
 		return dao.RelationUndoActionDao(strconv.Itoa(userId), toUserId)
 	}
 	return errors.New("非法操作类型")
+}
 
+func RelationFollowListService(token, userId string) ([]dto.User, error) {
+
+	tokenId, err := utils.ParseTokenForId(token)
+
+	if err != nil {
+		return nil, errors.New("Token 不合法")
+	}
+
+	id, err := strconv.Atoi(userId)
+
+	if id != tokenId {
+		return nil, errors.New("Token 不合法")
+	}
+	return dao.RelationFollowListDao(id)
 }
