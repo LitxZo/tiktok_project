@@ -10,6 +10,7 @@ import (
 func InitCoreRouter() {
 	userApi := api.NewUserApi()
 	videoApi := api.NewVideoApi()
+	relationApi := api.RelationApi{}
 	RegistRouter(func(rg *gin.RouterGroup) {
 		rg.GET("/feed/", videoApi.FeedVideo)
 		rg.GET("/user/", userApi.UserInfo)
@@ -23,5 +24,9 @@ func InitCoreRouter() {
 				"msg": "publishList success",
 			})
 		})
+
+		relationGroup := rg.Group("/relation")
+		relationGroup.POST("/action/", relationApi.RelationAction)
+
 	})
 }
