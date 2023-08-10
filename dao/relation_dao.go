@@ -55,7 +55,7 @@ func RelationUndoActionDao(userId, toUserId string) error {
 func RelationFollowListDao(userId int) ([]dto.User, error) {
 
 	var ids []int64
-	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("user_id").Where("follow_id = ?", userId).Find(&ids)
+	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("follow_id").Where("user_id = ?", userId).Find(&ids)
 	if result.Error != nil {
 		return nil, result.Error
 	}
