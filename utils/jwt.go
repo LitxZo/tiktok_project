@@ -55,3 +55,15 @@ func TokenIsValid(tokenStr string) bool {
 	}
 	return err == nil
 }
+
+func ParseTokenForId(tokenStr string) (int, error) {
+	claim := JwtUserClaim{}
+	_, err := jwt.ParseWithClaims(tokenStr, &claim, func(t *jwt.Token) (interface{}, error) {
+		return signedKey, nil
+	})
+	if err != nil {
+		fmt.Println(err.Error())
+		err = errors.New("invalid token")
+	}
+	return claim.ID, err
+}
