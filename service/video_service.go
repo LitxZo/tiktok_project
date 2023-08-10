@@ -20,3 +20,7 @@ func VideoPublish(filePath, token, title string) error {
 	}
 	return nil
 }
+
+func VideoPublishList(id int) {
+
+}
