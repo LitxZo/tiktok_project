@@ -76,3 +76,29 @@ func RelationFollowListDao(userId int) ([]dto.User, error) {
 
 	return userList, nil
 }
+
+// 查询某用户的粉丝列表
+func RelationFollowerListDao(userId int) ([]dto.User, error) {
+
+	var ids []int64
+	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("user_id").Where("follow_id = ?", userId).Find(&ids)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	var userList []dto.User
+
+	for _, v := range ids {
+		user := model.User{}
+		err := global.DB.Table(user.GetTableName()).Where("id = ?", v).Find(&user).Error
+		if err != nil {
+			return nil, err
+		}
+		userList = append(userList, bindUserDaoToDto(user))
+	}
+	if len(userList) == 0 {
+		return nil, nil
+	}
+
+	return userList, nil
+}

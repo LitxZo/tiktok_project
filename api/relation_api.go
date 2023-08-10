@@ -51,3 +51,23 @@ func (m RelationApi) FollowList(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, resp)
 
 }
+
+// 粉丝列表
+func (m RelationApi) FollowerList(ctx *gin.Context) {
+	var req dto.DouyinRelationFollowerListRequest
+	err := ctx.ShouldBindQuery(&req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowerList"))
+		return
+	}
+
+	userList, err := service.RelationFollowListService(req.Token, req.UserId)
+
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowerList"))
+		return
+	}
+	resp := dto.GenerateFollowerListResponse(userList)
+	ctx.JSON(http.StatusOK, resp)
+
+}
