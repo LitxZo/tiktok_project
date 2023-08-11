@@ -18,7 +18,7 @@ func InitCoreRouter() {
 		userGroup.POST("/register/", userApi.UserRegister)
 		userGroup.POST("/login/", userApi.UserLogin)
 		publishGroup := rg.Group("/publish")
-		publishGroup.POST("/action", videoApi.PublishVideo)
+		publishGroup.POST("/action/", videoApi.PublishVideo)
 		publishGroup.GET("/list/", func(ctx *gin.Context) {
 			ctx.JSON(http.StatusAccepted, gin.H{
 				"msg": "publishList success",
