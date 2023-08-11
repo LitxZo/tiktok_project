@@ -2,6 +2,7 @@ package dao
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"tiktok_project/global"
 	"tiktok_project/model"
@@ -23,7 +24,7 @@ func RelationActionDao(userId, toUserId string) error {
 		FollowId: int64(toId),
 	}
 
-	if err := global.DB.Table(followRecord.GetTableName()).Create(followRecord).Error; err != nil {
+	if err := global.DB.Table(followRecord.GetTableName()).Create(&followRecord).Error; err != nil {
 		return errors.New("关注用户失败")
 	}
 	return nil
@@ -55,6 +56,7 @@ func RelationUndoActionDao(userId, toUserId string) error {
 func RelationFollowListDao(userId int) ([]dto.User, error) {
 
 	var ids []int64
+	fmt.Println(userId)
 	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("follow_id").Where("user_id = ?", userId).Find(&ids)
 	if result.Error != nil {
 		return nil, result.Error

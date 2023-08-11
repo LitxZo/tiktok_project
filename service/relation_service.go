@@ -25,16 +25,14 @@ func RelationActionService(token, toUserId, actionType string) error {
 // 查询某用户关注列表
 func RelationFollowListService(token, userId string) ([]dto.User, error) {
 
-	tokenId, err := utils.ParseTokenForId(token)
-
-	if err != nil {
-		return nil, errors.New("Token 不合法")
+	if !utils.TokenIsValid(token) {
+		return nil, errors.New("token is not valid")
 	}
 
 	id, err := strconv.Atoi(userId)
 
-	if id != tokenId {
-		return nil, errors.New("Token 不合法")
+	if err != nil {
+		return nil, err
 	}
 	return dao.RelationFollowListDao(id)
 }
@@ -42,16 +40,14 @@ func RelationFollowListService(token, userId string) ([]dto.User, error) {
 // 查询某用户的粉丝列表
 func RelationFollowerListService(token, userId string) ([]dto.User, error) {
 
-	tokenId, err := utils.ParseTokenForId(token)
-
-	if err != nil {
-		return nil, errors.New("Token 不合法")
+	if !utils.TokenIsValid(token) {
+		return nil, errors.New("token is not valid")
 	}
 
 	id, err := strconv.Atoi(userId)
 
-	if id != tokenId {
-		return nil, errors.New("Token 不合法")
+	if err != nil {
+		return nil, err
 	}
 	return dao.RelationFollowerListDao(id)
 }

@@ -61,7 +61,7 @@ func (m RelationApi) FollowerList(ctx *gin.Context) {
 		return
 	}
 
-	userList, err := service.RelationFollowListService(req.Token, req.UserId)
+	userList, err := service.RelationFollowerListService(req.Token, req.UserId)
 
 	if err != nil {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowerList"))

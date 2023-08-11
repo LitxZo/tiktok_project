@@ -39,7 +39,7 @@ func GenerateFollowListResponse(userList []User) DouyinRelationFollowListRespons
 func GenerateFollowerListResponse(userList []User) DouyinRelationFollowerListResponse {
 	var resp DouyinRelationFollowerListResponse
 	resp.StatusCode = 0
-	resp.StatusMsg = "Get User Follow List Success"
+	resp.StatusMsg = "Get User Follower List Success"
 	resp.UserList = userList
 	return resp
 }
