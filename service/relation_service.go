@@ -14,10 +14,16 @@ func RelationActionService(token, toUserId, actionType string) error {
 	if err != nil {
 		return errors.New("Token 不合法")
 	}
+	toUserId_int64, err := strconv.Atoi(toUserId)
+
+	if err != nil {
+		return errors.New("ID 错误")
+	}
+
 	if actionType == "1" { //关注
-		return dao.RelationActionDao(strconv.Itoa(userId), toUserId)
+		return dao.RelationActionDao(int64(userId), int64(toUserId_int64))
 	} else if actionType == "0" { // 取消关注
-		return dao.RelationUndoActionDao(strconv.Itoa(userId), toUserId)
+		return dao.RelationUndoActionDao(int64(userId), int64(toUserId_int64))
 	}
 	return errors.New("非法操作类型")
 }
@@ -26,7 +32,7 @@ func RelationActionService(token, toUserId, actionType string) error {
 func RelationFollowListService(token, userId string) ([]dto.User, error) {
 
 	if !utils.TokenIsValid(token) {
-		return nil, errors.New("token is not valid")
+		return nil, errors.New("Token 不合法")
 	}
 
 	id, err := strconv.Atoi(userId)
@@ -41,7 +47,7 @@ func RelationFollowListService(token, userId string) ([]dto.User, error) {
 func RelationFollowerListService(token, userId string) ([]dto.User, error) {
 
 	if !utils.TokenIsValid(token) {
-		return nil, errors.New("token is not valid")
+		return nil, errors.New("Token 不合法")
 	}
 
 	id, err := strconv.Atoi(userId)

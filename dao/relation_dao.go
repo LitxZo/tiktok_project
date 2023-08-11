@@ -3,46 +3,39 @@ package dao
 import (
 	"errors"
 	"fmt"
-	"strconv"
 	"tiktok_project/global"
 	"tiktok_project/model"
 	"tiktok_project/service/dto"
 )
 
 // 关注用户
-func RelationActionDao(userId, toUserId string) error {
-	id, err := strconv.Atoi(userId)
-	if err != nil {
-		return errors.New("关注用户失败")
-	}
-	toId, err := strconv.Atoi(toUserId)
-	if err != nil {
-		return errors.New("关注用户失败")
-	}
+func RelationActionDao(userId, toUserId int64) error {
+
 	followRecord := model.FollowRecord{
-		UserId:   int64(id),
-		FollowId: int64(toId),
+		UserId:   userId,
+		FollowId: toUserId,
 	}
 
-	if err := global.DB.Table(followRecord.GetTableName()).Create(&followRecord).Error; err != nil {
-		return errors.New("关注用户失败")
+	var count int64
+	global.DB.Table(followRecord.GetTableName()).Where("user_id = ? AND follow_id = ? AND deleted_at IS NULL", userId, toUserId).Count(&count)
+
+	if count == 0 {
+		if err := global.DB.Table(followRecord.GetTableName()).Create(&followRecord).Error; err != nil {
+			return errors.New("关注用户失败")
+		}
+	} else {
+		return errors.New("已关注该用户")
 	}
+
 	return nil
 }
 
 // 取消关注用户
-func RelationUndoActionDao(userId, toUserId string) error {
-	id, err := strconv.Atoi(userId)
-	if err != nil {
-		return errors.New("取消关注用户失败")
-	}
-	toId, err := strconv.Atoi(toUserId)
-	if err != nil {
-		return errors.New("取消关注用户失败")
-	}
+func RelationUndoActionDao(userId, toUserId int64) error {
+
 	followRecord := model.FollowRecord{}
 
-	result := global.DB.Table(followRecord.GetTableName()).Where("user_id = ? AND follow_id = ?", int64(id), int64(toId)).Delete(&followRecord)
+	result := global.DB.Table(followRecord.GetTableName()).Where("user_id = ? AND follow_id = ? AND deleted_at IS NULL", userId, toUserId).Delete(&followRecord)
 	if result.Error != nil {
 		return errors.New("并未关注该用户")
 	}
@@ -57,7 +50,7 @@ func RelationFollowListDao(userId int) ([]dto.User, error) {
 
 	var ids []int64
 	fmt.Println(userId)
-	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("follow_id").Where("user_id = ?", userId).Find(&ids)
+	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("follow_id").Where("user_id = ? AND deleted_at IS NULL", userId).Find(&ids)
 	if result.Error != nil {
 		return nil, result.Error
 	}
@@ -83,7 +76,7 @@ func RelationFollowListDao(userId int) ([]dto.User, error) {
 func RelationFollowerListDao(userId int) ([]dto.User, error) {
 
 	var ids []int64
-	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("user_id").Where("follow_id = ?", userId).Find(&ids)
+	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("user_id").Where("follow_id = ? AND deleted_at IS NULL", userId).Find(&ids)
 	if result.Error != nil {
 		return nil, result.Error
 	}
