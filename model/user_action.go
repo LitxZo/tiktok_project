@@ -18,10 +18,10 @@ func (f FavoriteRecord) GetTableName() string {
 type FollowRecord struct {
 	gorm.Model
 	Id       int64 `protobuf:"varint,1,req,name=id" json:"id,omitempty" gorm:"not null;primary_key;auto_increment"` // 记录id
-	User     User  `gorm:"foreignKey:UserId"`
-	UserId   int64 `protobuf:"varint,1,req,name=user_id" json:"user_id"` // 关注者id
-	Follow   User  `gorm:"foreignKey:FollowId"`
-	FollowId int64 `protobuf:"varint,1,req,name=follow_id" json:"follow_id"` // 被关注者id
+	User     User  `gorm:"foreignKey:Id; references:UserId"`
+	UserId   int64 `protobuf:"varint,2,req,name=user_id" json:"user_id"` // 关注者id
+	Follow   User  `gorm:"foreignKey:Id; references:FollowId"`
+	FollowId int64 `protobuf:"varint,3,req,name=follow_id" json:"follow_id"` // 被关注者id
 }
 
 func (f FollowRecord) GetTableName() string {
