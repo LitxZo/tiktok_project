@@ -53,7 +53,7 @@ func UserInfoDao(userId string) (dto.User, error) {
 
 func bindUserDaoToDto(user model.User) dto.User {
 	var userInfo dto.User
-	userInfo.Id = int64(user.Id)
+	userInfo.Id = user.Id
 	userInfo.Name = user.Name
 	userInfo.Avatar = user.Avatar
 	userInfo.BackgroundImage = user.BackgroundImage

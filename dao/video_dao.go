@@ -29,7 +29,7 @@ func FeedVideoDao() ([]dto.Video, error) {
 
 func bindVideoDaoToDto(video model.Video, user dto.User) dto.Video {
 	var videoInfo dto.Video
-	videoInfo.Id = int64(video.Id)
+	videoInfo.Id = video.Id
 	videoInfo.Author = user
 	videoInfo.PlayUrl = video.PlayUrl
 	videoInfo.CoverUrl = video.CoverUrl

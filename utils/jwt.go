@@ -18,12 +18,12 @@ type JwtUserClaim struct {
 var signedKey = []byte(viper.GetString("Token.signedKey"))
 
 func GenerateToken(id int, t time.Time) (string, error) {
-	expiresTime := viper.GetInt("Token.expiresTime")
+	// expiresTime := viper.GetInt("Token.expiresTime")
 	claim := JwtUserClaim{
 		ID:   id,
 		time: t,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Duration(expiresTime) * time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(3000 * time.Hour)),
 			IssuedAt:  jwt.NewNumericDate(time.Now()),
 			Subject:   "Token",
 		},
