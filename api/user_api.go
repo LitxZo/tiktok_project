@@ -35,7 +35,6 @@ func (m UserApi) UserRegister(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, resp)
-
 }
 
 func (m UserApi) UserLogin(ctx *gin.Context) {

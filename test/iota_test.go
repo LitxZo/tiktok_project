@@ -12,6 +12,6 @@ package test
 // 	d
 // )
 
-// func Test_iota(test *testing.T) {
-// 	fmt.Println(a, b, c, d)
-// }
+//	func Test_iota(test *testing.T) {
+//		fmt.Println(a, b, c, d)
+//	}
