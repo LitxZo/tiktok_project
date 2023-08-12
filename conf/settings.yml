@@ -1,7 +1,9 @@
 Server:
+  ipAddress: 192.168.3.44 #服务器ip
   port: 9999   #运行端口
   rootgroup: /douyin  #路由根地址
-  staticPath: ./static
+  staticPath: ./static #文件保存目录
+  staticUrl: http://192.168.3.44:9999/static #文件地址
 
 Log:
   maxSize: 100 # 日志文件最大尺寸（M）

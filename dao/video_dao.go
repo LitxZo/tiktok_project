@@ -18,7 +18,7 @@ func FeedVideoDao() ([]dto.Video, error) {
 	dtoVideos := []dto.Video{}
 	for _, v := range data {
 		user := model.User{}
-		err := global.DB.Table(user.GetTableName()).Where("id = ?", v.AuthorId).Find(&user).Error
+		err := global.DB.Table(user.GetTableName()).Where("id = ?", v.AuthorId).First(&user).Error
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return nil, err
 		}
@@ -40,18 +40,23 @@ func bindVideoDaoToDto(video model.Video, user dto.User) dto.Video {
 	return videoInfo
 }
 
-func VideoPublishDao(filePath, token, title string) error {
+func VideoPublishDao(fileUrl, token, title string) error {
 	claim, tokenErr := utils.ParseToken(token)
-	var user model.User
+	// var user model.User
+	var authorId int
 	if tokenErr != nil {
-		user = model.User{}
+		authorId = 0
 	} else {
-		global.DB.Table(user.GetTableName()).Where("user_id = ?", claim.ID).First(&user)
+		authorId = claim.ID
 	}
+	// else {
+	// 	global.DB.Table(user.GetTableName()).Where("id = ?", claim.ID).First(&user)
+	// 	fmt.Println(user)
+	// }
 	err := global.DB.Create(&model.Video{
-		PlayUrl: filePath,
-		Title:   title,
-		User:    user,
+		PlayUrl:  fileUrl,
+		Title:    title,
+		AuthorId: authorId,
 	}).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return err
