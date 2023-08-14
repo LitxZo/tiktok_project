@@ -24,12 +24,13 @@ func UserLoginService(username, password string) (int, error) {
 }
 
 func UserInfoService(userId, Token string) (dto.User, error) {
-	if !utils.TokenIsValid(Token) {
+	claim, err := utils.ParseToken(Token)
+	if err != nil {
 		return dto.User{}, errors.New("token is not valid")
 	}
-	userInfo, err := dao.UserInfoDao(userId)
-	if err != nil {
-		return dto.User{}, err
+	userInfo, err1 := dao.UserInfoDao(userId, claim.ID)
+	if err1 != nil {
+		return dto.User{}, err1
 	}
 	return userInfo, nil
 }

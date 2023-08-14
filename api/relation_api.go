@@ -1,10 +1,12 @@
 package api
 
 import (
-	"github.com/gin-gonic/gin"
+	"fmt"
 	"net/http"
 	"tiktok_project/service"
 	"tiktok_project/service/dto"
+
+	"github.com/gin-gonic/gin"
 )
 
 type RelationApi struct {
@@ -37,17 +39,18 @@ func (m RelationApi) FollowList(ctx *gin.Context) {
 	var req dto.DouyinRelationFollowListRequest
 	err := ctx.ShouldBindQuery(&req)
 	if err != nil {
-		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowList"))
+		ctx.JSON(http.StatusOK, dto.ErrResponseS(err, "Get FollowList"))
 		return
 	}
 
 	userList, err := service.RelationFollowListService(req.Token, req.UserId)
 
 	if err != nil {
-		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowList"))
+		ctx.JSON(http.StatusOK, dto.ErrResponseS(err, "Get FollowList"))
 		return
 	}
 	resp := dto.GenerateFollowListResponse(userList)
+	fmt.Println(resp)
 	ctx.JSON(http.StatusOK, resp)
 
 }
@@ -57,14 +60,14 @@ func (m RelationApi) FollowerList(ctx *gin.Context) {
 	var req dto.DouyinRelationFollowerListRequest
 	err := ctx.ShouldBindQuery(&req)
 	if err != nil {
-		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowerList"))
+		ctx.JSON(http.StatusOK, dto.ErrResponseS(err, "Get FollowerList"))
 		return
 	}
 
 	userList, err := service.RelationFollowerListService(req.Token, req.UserId)
 
 	if err != nil {
-		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Get FollowerList"))
+		ctx.JSON(http.StatusOK, dto.ErrResponseS(err, "Get FollowerList"))
 		return
 	}
 	resp := dto.GenerateFollowerListResponse(userList)
@@ -77,11 +80,11 @@ func (m RelationApi) FriendList(ctx *gin.Context) {
 	var req dto.DouyinRelationFriendListRequest
 	err := ctx.ShouldBindQuery(&req)
 	if err != nil {
-		ctx.JSON(http.StatusOK, dto.ErrResponse(err, " FridendList "))
+		ctx.JSON(http.StatusOK, dto.ErrResponseS(err, " FridendList "))
 	}
 	userList, err := service.RelationFriendListService(req.Token, req.UserId)
 	if err != nil {
-		ctx.JSON(http.StatusOK, dto.ErrResponse(err, " FriendList "))
+		ctx.JSON(http.StatusOK, dto.ErrResponseS(err, " FriendList "))
 		return
 	}
 	resp := dto.GenerateFriendListResponse(userList)

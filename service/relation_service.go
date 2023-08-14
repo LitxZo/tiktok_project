@@ -22,7 +22,7 @@ func RelationActionService(token, toUserId, actionType string) error {
 
 	if actionType == "1" { //关注
 		return dao.RelationActionDao(userId, toUserId_int)
-	} else if actionType == "0" { // 取消关注
+	} else if actionType == "2" { // 取消关注
 		return dao.RelationUndoActionDao(userId, toUserId_int)
 	}
 	return errors.New("非法操作类型")
@@ -30,43 +30,51 @@ func RelationActionService(token, toUserId, actionType string) error {
 
 // 查询某用户关注列表
 func RelationFollowListService(token, userId string) ([]dto.User, error) {
-
-	if !utils.TokenIsValid(token) {
+	tokenId, err1 := utils.ParseTokenForId(token)
+	if err1 != nil {
 		return nil, errors.New("token 不合法")
 	}
 
 	id, err := strconv.Atoi(userId)
-
 	if err != nil {
 		return nil, err
+	}
+	if userId == "0" {
+		return dao.RelationFollowListDao(tokenId)
 	}
 	return dao.RelationFollowListDao(id)
 }
 
 // 查询某用户的粉丝列表
 func RelationFollowerListService(token, userId string) ([]dto.User, error) {
-
-	if !utils.TokenIsValid(token) {
+	tokenId, err1 := utils.ParseTokenForId(token)
+	if err1 != nil {
 		return nil, errors.New("token 不合法")
 	}
 
 	id, err := strconv.Atoi(userId)
-
 	if err != nil {
 		return nil, err
+	}
+	if userId == "0" {
+		return dao.RelationFollowerListDao(tokenId)
 	}
 	return dao.RelationFollowerListDao(id)
 }
 
 // 查询某用户朋友列表
 func RelationFriendListService(token, userId string) ([]dto.User, error) {
-	if !utils.TokenIsValid(token) {
+	tokenId, err1 := utils.ParseTokenForId(token)
+	if err1 != nil {
 		return nil, errors.New("token 不合法")
 	}
+
 	id, err := strconv.Atoi(userId)
 	if err != nil {
 		return nil, err
 	}
-
+	if userId == "0" {
+		return dao.RelationFriendListDao(tokenId)
+	}
 	return dao.RelationFriendListDao(id)
 }

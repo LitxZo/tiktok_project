@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"path"
 	"strconv"
@@ -35,8 +36,9 @@ func (m VideoApi) FeedVideo(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err1, "Feed Video"))
 		return
 	}
+	fmt.Println(req.Token)
 	// 获取video信息
-	videos, err2 := service.FeedVideoService()
+	videos, err2 := service.FeedVideoService(req.Token)
 	if err2 != nil {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err2, "Feed Video"))
 		return
@@ -47,6 +49,7 @@ func (m VideoApi) FeedVideo(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err3, "Feed Video"))
 		return
 	}
+	fmt.Println(resp)
 	ctx.JSON(http.StatusOK, resp)
 }
 

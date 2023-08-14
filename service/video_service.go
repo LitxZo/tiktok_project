@@ -1,12 +1,20 @@
 package service
 
 import (
+	"fmt"
 	"tiktok_project/dao"
 	"tiktok_project/service/dto"
+	"tiktok_project/utils"
 )
 
-func FeedVideoService() ([]dto.Video, error) {
-	videos, err := dao.FeedVideoDao()
+func FeedVideoService(token string) ([]dto.Video, error) {
+	id, err := utils.ParseTokenForId(token)
+	fmt.Println(id)
+	if err != nil {
+		// return nil, errors.New("token is not valid")
+		id = 0
+	}
+	videos, err := dao.FeedVideoDao(id)
 	if err != nil {
 		return nil, err
 	}

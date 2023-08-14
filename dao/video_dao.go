@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func FeedVideoDao() ([]dto.Video, error) {
+func FeedVideoDao(userId int) ([]dto.Video, error) {
 	var data []model.Video
 	err := global.DB.Limit(30).Order("id desc").Find(&data).Error
 	if err != nil {
@@ -22,7 +22,13 @@ func FeedVideoDao() ([]dto.Video, error) {
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return nil, err
 		}
-		dtoVideos = append(dtoVideos, bindVideoDaoToDto(v, bindUserDaoToDto(user)))
+		var followRecord model.FollowRecord
+		var isFollow bool = true
+		if err2 := global.DB.Table(followRecord.GetTableName()).Where("user_id = ? AND follow_id = ? AND deleted_at IS NULL", userId, v.AuthorId).Find(&followRecord).Error; err2 != nil || followRecord.Id == 0 {
+			isFollow = false
+		}
+
+		dtoVideos = append(dtoVideos, bindVideoDaoToDto(v, bindUserDaoToDto(user, isFollow)))
 	}
 	return dtoVideos, nil
 }

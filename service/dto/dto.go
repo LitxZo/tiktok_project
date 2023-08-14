@@ -28,9 +28,24 @@ type Video struct {
 	Title         string `protobuf:"bytes,8,req,name=title" json:"title,omitempty"`                                       // 视频标题
 }
 
+type Message struct {
+	Id         int    `protobuf:"varint,1,req,name=id" json:"id,omitempty"`                                  // 消息id
+	ToUserId   int    `protobuf:"varint,2,req,name=to_user_id" json:"to_user_id,omitempty"`                  // 该消息接收者的id
+	FromUserId int    `protobuf:"varint,3,req,name=from_user_id" json:"from_user_id,omitempty"`              // 该消息发送者的id
+	Content    string `protobuf:"bytes,4,req,name=content" json:"content,omitempty"`                         // 消息内容
+	CreateTime int64  `protobuf:"bytes,5,opt,name=create_time,json=createTime" json:"create_time,omitempty"` // 消息创建时间
+}
+
 func ErrResponse(err error, context string) gin.H {
 	return gin.H{
 		"status_code": 1,
+		"status_msg":  context + "Error:" + err.Error(),
+	}
+}
+
+func ErrResponseS(err error, context string) gin.H {
+	return gin.H{
+		"status_code": "1",
 		"status_msg":  context + "Error:" + err.Error(),
 	}
 }

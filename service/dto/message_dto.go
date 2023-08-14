@@ -1,18 +1,16 @@
 package dto
 
-import "tiktok_project/model"
-
 type DouyinMessageChatRequest struct {
-	Token    string `protobuf:"bytes,1,req,name=token" json:"token,omitempty " form:"token"`                              // 用户鉴权token
+	Token    string `protobuf:"bytes,1,req,name=token" json:"token,omitempty" form:"token"`                               // 用户鉴权token
 	ToUserId string `protobuf:"varint,2,req,name=to_user_id,json=toUserId" json:"to_user_id,omitempty" form:"to_user_id"` // 对方用户id
 	// PreMsgTime int64  `protobuf:"varint,3,req,name=pre_msg_time,json=preMsgTime" json:"pre_msg_time,omitempty"` //上次最新消息的时间（新增字段-apk更新中）
 
 }
 
 type DouyinMessageChatResponse struct {
-	StatusCode  int32           `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"`   // 状态码，0-成功，其他值-失败
-	StatusMsg   string          `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`       // 返回状态描述
-	MessageList []model.Message `protobuf:"bytes,3,rep,name=message_list,json=messageList" json:"message_list,omitempty"` // 消息列表
+	StatusCode  int32     `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"`   // 状态码，0-成功，其他值-失败
+	StatusMsg   string    `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`       // 返回状态描述
+	MessageList []Message `protobuf:"bytes,3,rep,name=message_list,json=messageList" json:"message_list,omitempty"` // 消息列表
 }
 
 type DouyinRelationMessageActionRequest struct {
@@ -23,13 +21,13 @@ type DouyinRelationMessageActionRequest struct {
 }
 
 type DouyinRelationActionResponse struct {
-	StatusCode int32  `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"` // 状态码，0-成功，其他值-失败
+	StatusCode string `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"` // 状态码，0-成功，其他值-失败
 	StatusMsg  string `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`     // 返回状态描述
 }
 
-func GenerateChatResponse(messages []model.Message) DouyinMessageChatResponse {
+func GenerateChatResponse(messages []Message) DouyinMessageChatResponse {
 	var resp DouyinMessageChatResponse
-	resp.StatusCode = 200
+	resp.StatusCode = 0
 	resp.StatusMsg = "查询成功"
 	resp.MessageList = messages
 	return resp
@@ -37,7 +35,7 @@ func GenerateChatResponse(messages []model.Message) DouyinMessageChatResponse {
 
 func GenerateActionResponse() DouyinRelationActionResponse {
 	var resp DouyinRelationActionResponse
-	resp.StatusCode = 200
+	resp.StatusCode = "0"
 	resp.StatusMsg = "插入成功"
 	return resp
 }

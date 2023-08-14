@@ -7,15 +7,16 @@ import (
 	"tiktok_project/model"
 	"tiktok_project/service/dto"
 	"tiktok_project/utils"
+	"time"
 )
 
-func MessageChat(req dto.DouyinMessageChatRequest) ([]model.Message, error) {
+func MessageChat(req dto.DouyinMessageChatRequest) ([]dto.Message, error) {
 	if !utils.TokenIsValid(req.Token) {
-		return make([]model.Message, 0), errors.New("token is not valid")
+		return make([]dto.Message, 0), errors.New("token is not valid")
 	}
 	claim, err := utils.ParseToken(req.Token)
 	if err != nil {
-		return make([]model.Message, 0), err
+		return make([]dto.Message, 0), err
 	}
 	id, err := strconv.Atoi(req.ToUserId)
 	if err != nil {
@@ -23,7 +24,7 @@ func MessageChat(req dto.DouyinMessageChatRequest) ([]model.Message, error) {
 	}
 	messages, err := dao.MessageChatDao(claim.ID, id)
 	if err != nil {
-		return make([]model.Message, 0), err
+		return make([]dto.Message, 0), err
 	}
 	return messages, nil
 
@@ -53,6 +54,7 @@ func GenerateMessage(FromUserId int, ToUserId int, content string) (model.Messag
 	message.FromUserId = FromUserId
 	message.ToUserId = ToUserId
 	message.Content = content
+	message.CreateTime = time.Now().Unix()
 	return message, nil
 
 }

@@ -3,15 +3,26 @@ package dao
 import (
 	"tiktok_project/global"
 	"tiktok_project/model"
+	"tiktok_project/service/dto"
 )
 
-func MessageChatDao(FromUserId int, ToUserId int) ([]model.Message, error) {
-	var MessageList = make([]model.Message, 0)
-	result := global.DB.Where("from_user_id= ? and to_user_id=? and delete_at is null", FromUserId, ToUserId).Find(&MessageList)
+func MessageChatDao(FromUserId int, ToUserId int) ([]dto.Message, error) {
+	var ids []int64
+	result := global.DB.Table(model.Message{}.GetTableName()).Where("from_user_id = ? AND to_user_id = ? AND deleted_at IS NULL", FromUserId, ToUserId).Or("from_user_id = ? AND to_user_id = ? AND deleted_at IS NULL", ToUserId, FromUserId).Select("id").Find(&ids)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	return MessageList, nil
+	var messageList []dto.Message
+	for _, v := range ids {
+		msg := model.Message{}
+		err := global.DB.Table(msg.GetTableName()).Where("id = ? AND deleted_at IS NULL", v).First(&msg).Error
+		if err != nil {
+			return nil, err
+		}
+		messageList = append(messageList, bindMessageDaotoDto(msg))
+	}
+
+	return messageList, nil
 }
 
 func MessageActionDao(message model.Message) error {
@@ -21,4 +32,13 @@ func MessageActionDao(message model.Message) error {
 	}
 
 	return nil
+}
+
+func bindMessageDaotoDto(daoMsg model.Message) dto.Message {
+	var dtoMsg dto.Message
+	dtoMsg.Content = daoMsg.Content
+	dtoMsg.CreateTime = daoMsg.CreateTime
+	dtoMsg.FromUserId = daoMsg.FromUserId
+	dtoMsg.ToUserId = daoMsg.ToUserId
+	return dtoMsg
 }
