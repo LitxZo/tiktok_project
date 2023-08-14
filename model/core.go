@@ -4,6 +4,12 @@ import (
 	"gorm.io/gorm"
 )
 
+//	type Account struct {
+//		gorm.Model
+//		Id       int64  `protobuf:"varint,1,req,name=id" json:"id,omitempty"`    // 帐户id
+//		Name     string `protobuf:"bytes,2,req,name=name" json:"name,omitempty"` //用户名称
+//		Password string `protobuf:"bytes,2,req,name=password" json:"password,omitempty"`
+//	}
 type User struct {
 	gorm.Model
 	Id              int    `protobuf:"varint,1,req,name=id" json:"id,omitempty" gorm:"not null;primary_key;auto_increment"`                   // 用户id
@@ -18,6 +24,8 @@ type User struct {
 	WorkCount       int    `protobuf:"varint,10,opt,name=work_count,json=workCount" json:"work_count,omitempty"`                              //作品数量
 	FavoriteCount   int    `protobuf:"varint,11,opt,name=favorite_count,json=favoriteCount" json:"favorite_count,omitempty"`                  //点赞数量
 	Password        string `protobuf:"bytes,12,req,name=password" json:"password,omitempty" gorm:"size:128; not null"`                        //密码
+	// FollowId        IdGroup `protobuf:"bytes,13,opt,name=follow_id" jsopn:"follow_id,omitempty"`                                           //关注者id
+	// FavoriteId      IdGroup `protobuf:"bytes,13,opt,name=favorite_id" jsopn:"favorite_id,omitempty"`
 }
 
 type Video struct {
@@ -51,3 +59,14 @@ func (u User) GetTableName() string {
 func (v Video) GetTableName() string {
 	return "videos"
 }
+
+// type IdGroup []int64
+
+// func (f *IdGroup) Scan(value interface{}) error {
+// 	v, _ := value.([]byte)
+// 	return json.Unmarshal(v, f)
+// }
+
+// func (f IdGroup) Value() (driver.Value, error) {
+// 	return json.Marshal(f)
+// }

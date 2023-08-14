@@ -3,14 +3,15 @@ package dao
 import (
 	"errors"
 	"fmt"
-	"gorm.io/gorm"
 	"tiktok_project/global"
 	"tiktok_project/model"
 	"tiktok_project/service/dto"
+
+	"gorm.io/gorm"
 )
 
 // 关注用户
-func RelationActionDao(userId, toUserId int64) error {
+func RelationActionDao(userId, toUserId int) error {
 
 	followRecord := model.FollowRecord{
 		UserId:   userId,
@@ -51,7 +52,7 @@ func RelationActionDao(userId, toUserId int64) error {
 }
 
 // 取消关注用户
-func RelationUndoActionDao(userId, toUserId int64) error {
+func RelationUndoActionDao(userId, toUserId int) error {
 
 	followRecord := model.FollowRecord{}
 

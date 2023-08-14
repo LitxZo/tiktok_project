@@ -77,10 +77,12 @@ func (m VideoApi) PublishVideo(ctx *gin.Context) {
 	fileName := strconv.FormatInt(time.Now().Unix(), 10) + file.Filename
 	// 文件保存目录
 	filePath := viper.GetString("Server.staticPath") + "/" + "video" + "/" + fileName
+	//文件地址
+	fileUrl := viper.GetString("Server.staticUrl") + "/" + "video" + "/" + fileName
 	// 保存文件
 	ctx.SaveUploadedFile(file, filePath)
 	// 调用发布视频服务
-	err3 := service.VideoPublish(filePath, token, title)
+	err3 := service.VideoPublish(fileUrl, token, title)
 	if err3 != nil {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err3, "Publish Video"))
 		return
@@ -97,7 +99,7 @@ func (m VideoApi) PublishList(ctx *gin.Context) {
 	}
 
 	if utils.TokenIsValid(req.Token) {
-		err2 := errors.New("Token Invalid")
+		err2 := errors.New("token Invalid")
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err2, "Get Publish Video List"))
 		return
 	}
