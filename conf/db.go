@@ -23,5 +23,6 @@ func InitDB() (*gorm.DB, error) {
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.Video{})
 	db.AutoMigrate(&model.FollowRecord{})
+	db.AutoMigrate(&model.Message{})
 	return db, nil
 }

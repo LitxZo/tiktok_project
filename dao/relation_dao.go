@@ -136,3 +136,28 @@ func RelationFollowerListDao(userId int) ([]dto.User, error) {
 
 	return userList, nil
 }
+
+func RelationFriendListDao(userId int) ([]dto.User, error) {
+	var ids []int
+	result := global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("follow_id").Where("user_id= ? ", userId).Find(&ids)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	result = global.DB.Table(model.FollowRecord{}.GetTableName()).Model(model.FollowRecord{}).Select("user_id").Where("follow_id = ? and user_id IN ? ", userId, ids).Find(&ids)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	var userList []dto.User
+	var users []model.User
+	result = global.DB.Table(model.User{}.GetTableName()).Model(model.User{}).Where("id in ?", ids).Find(&users)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	for _, user := range users {
+		userList = append(userList, bindUserDaoToDto(user))
+	}
+	if len(userList) == 0 {
+		return nil, nil
+	}
+	return userList, nil
+}

@@ -10,7 +10,7 @@ Log:
   developMode: true
 
 DB:
-  dsn : root:shouwangpigu233@tcp(127.0.0.1:3306)/tiktok_project?charset=utf8mb4&parseTime=True&loc=Local  #这里写自己的数据库用户名、密码和数据库名称
+  dsn : root:031201ghd@tcp(127.0.0.1:3306)/tiktok_project?charset=utf8mb4&parseTime=True&loc=Local  #这里写自己的数据库用户名、密码和数据库名称
   maxIdleConns : 10 # 最大空闲连接数
   maxOpenConns : 10 # 最大打开连接数
   

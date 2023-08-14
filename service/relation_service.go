@@ -57,3 +57,16 @@ func RelationFollowerListService(token, userId string) ([]dto.User, error) {
 	}
 	return dao.RelationFollowerListDao(id)
 }
+
+// 查询某用户朋友列表
+func RelationFriendListService(token, userId string) ([]dto.User, error) {
+	if !utils.TokenIsValid(token) {
+		return nil, errors.New("token 不合法")
+	}
+	id, err := strconv.Atoi(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	return dao.RelationFriendListDao(id)
+}

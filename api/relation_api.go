@@ -71,3 +71,19 @@ func (m RelationApi) FollowerList(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, resp)
 
 }
+
+// 朋友列表
+func (m RelationApi) FriendList(ctx *gin.Context) {
+	var req dto.DouyinRelationFriendListRequest
+	err := ctx.ShouldBindQuery(&req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, " FridendList "))
+	}
+	userList, err := service.RelationFriendListService(req.Token, req.UserId)
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, " FriendList "))
+		return
+	}
+	resp := dto.GenerateFriendListResponse(userList)
+	ctx.JSON(http.StatusOK, resp)
+}

@@ -16,8 +16,6 @@ func NewMessageApi() MessageApi {
 func (m MessageApi) MessageChat(ctx *gin.Context) {
 	var req dto.DouyinMessageChatRequest
 	err1 := ctx.ShouldBindQuery(&req) // 将请求与给定的格式进行绑定
-	print("接受的token为:")
-	print(req.ToUserId)
 	if err1 != nil {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err1, "Chat"))
 		return
@@ -26,21 +24,25 @@ func (m MessageApi) MessageChat(ctx *gin.Context) {
 	if err != nil {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Chat"))
 	}
-	resp, err := dto.GenerateChatResponse(messages)
-	if err != nil {
-		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Chat"))
-	}
+	resp := dto.GenerateChatResponse(messages)
+
 	ctx.JSON(http.StatusOK, resp)
 
 }
 
-//func (m MessageApi) MessageAction(ctx *gin.Context) {
-//	var req dto.DouyinRelationActionRequest
-//	err1 := ctx.ShouldBindQuery(&req) // 将请求与给定的格式进行绑定
-//	if err1 != nil {
-//		ctx.JSON(http.StatusOK, dto.ErrResponse(err1, "Registration"))
-//		return
-//	}
-//
-//
-//}
+func (m MessageApi) MessageAction(ctx *gin.Context) {
+	var req dto.DouyinRelationMessageActionRequest
+	err1 := ctx.ShouldBindQuery(&req) // 将请求与给定的格式进行绑定
+	if err1 != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err1, "Action"))
+		return
+	}
+	err := service.MessageAction(req)
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Action"))
+		return
+	}
+	resp := dto.GenerateActionResponse()
+	ctx.JSON(http.StatusOK, resp)
+
+}
