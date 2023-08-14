@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"tiktok_project/global"
 	"tiktok_project/service"
@@ -62,7 +61,6 @@ func (m UserApi) UserLogin(ctx *gin.Context) {
 func (m UserApi) UserInfo(ctx *gin.Context) {
 	var req dto.DouyinUserRequest
 	err1 := ctx.ShouldBindQuery(&req)
-	fmt.Println(req)
 	if err1 != nil {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err1, "Get User Info"))
 		return

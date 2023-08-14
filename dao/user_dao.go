@@ -44,7 +44,7 @@ func UserInfoDao(userId string) (dto.User, error) {
 	}
 	var user model.User
 	var userInfo dto.User
-	if err = global.DB.Table(user.GetTableName()).Where("user_id = ?", id).Error; err != nil {
+	if err = global.DB.Table(user.GetTableName()).Where("id = ?", id).Error; err != nil {
 		return dto.User{}, err
 	}
 	userInfo = bindUserDaoToDto(user)
