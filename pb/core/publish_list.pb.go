@@ -7,7 +7,6 @@
 package pb
 
 import (
-	
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -81,8 +80,8 @@ type DouyinPublishListResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	StatusCode *int32        `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"` // 状态码，0-成功，其他值-失败
-	StatusMsg  *string       `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`     // 返回状态描述
+	StatusCode *int32   `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"` // 状态码，0-成功，其他值-失败
+	StatusMsg  *string  `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`     // 返回状态描述
 	VideoList  []*Video `protobuf:"bytes,3,rep,name=video_list,json=videoList" json:"video_list,omitempty"`     // 用户发布的视频列表
 }
 
@@ -178,7 +177,7 @@ var file_publish_list_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_publish_list_proto_goTypes = []interface{}{
 	(*DouyinPublishListRequest)(nil),  // 0: douyin.core.douyin_publish_list_request
 	(*DouyinPublishListResponse)(nil), // 1: douyin.core.douyin_publish_list_response
-	(*Video)(nil),                // 2: douyin.core.Video
+	(*Video)(nil),                     // 2: douyin.core.Video
 }
 var file_publish_list_proto_depIdxs = []int32{
 	2, // 0: douyin.core.douyin_publish_list_response.video_list:type_name -> douyin.core.Video

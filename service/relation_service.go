@@ -10,6 +10,7 @@ import (
 
 // 关注/取消关注 操作
 func RelationActionService(token, toUserId, actionType string) error {
+	//
 	userId, err := utils.ParseTokenForId(token)
 	if err != nil {
 		return errors.New("token 不合法")

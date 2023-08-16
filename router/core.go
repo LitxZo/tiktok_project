@@ -12,6 +12,8 @@ func InitCoreRouter() {
 	videoApi := api.NewVideoApi()
 	messageApi := api.NewMessageApi()
 	relationApi := api.NewRelationApi()
+	favoriteApi := api.NewFavoriteApi()
+
 	RegistRouter(func(rg *gin.RouterGroup) {
 		rg.GET("/feed/", videoApi.FeedVideo)
 		rg.GET("/user/", userApi.UserInfo)
@@ -33,5 +35,9 @@ func InitCoreRouter() {
 		messageGroup := rg.Group("/message")
 		messageGroup.GET("/chat/", messageApi.MessageChat)
 		messageGroup.POST("/action/", messageApi.MessageAction)
+		favoriteGroup := rg.Group("/favorite")
+		favoriteGroup.POST("/action", favoriteApi.FavoriteAction)
+		favoriteGroup.GET("/list", favoriteApi.GetFavoriteList)
+
 	})
 }

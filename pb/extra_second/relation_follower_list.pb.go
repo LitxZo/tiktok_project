@@ -7,11 +7,11 @@
 package pb
 
 import (
-	core "tiktok_project/pb/core"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	core "tiktok_project/pb/core"
 )
 
 const (
