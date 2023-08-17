@@ -69,3 +69,20 @@ func VideoPublishDao(fileUrl, token, title string) error {
 	}
 	return nil
 }
+
+func VideoPublishListDao(id int) ([]dto.Video, error) {
+	var user model.User
+	var modelVideos []model.Video
+	if err := global.DB.Where("author_id = ?", id).Find(&modelVideos).Error; err != nil {
+		return nil, err
+	}
+	if err1 := global.DB.Table(user.GetTableName()).Where("id = ?", id).First(&user).Error; err1 != nil {
+		return nil, err1
+	}
+	dtoUser := bindUserDaoToDto(user, true)
+	var dtoVideos []dto.Video
+	for _, v := range modelVideos {
+		dtoVideos = append(dtoVideos, bindVideoDaoToDto(v, dtoUser))
+	}
+	return dtoVideos, nil
+}
