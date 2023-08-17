@@ -36,8 +36,8 @@ func InitCoreRouter() {
 		messageGroup.GET("/chat/", messageApi.MessageChat)
 		messageGroup.POST("/action/", messageApi.MessageAction)
 		favoriteGroup := rg.Group("/favorite")
-		favoriteGroup.POST("/action", favoriteApi.FavoriteAction)
-		favoriteGroup.GET("/list", favoriteApi.GetFavoriteList)
+		favoriteGroup.POST("/action/", favoriteApi.FavoriteAction)
+		favoriteGroup.GET("/list/", favoriteApi.GetFavoriteList)
 
 	})
 }

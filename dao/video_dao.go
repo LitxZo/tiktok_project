@@ -33,6 +33,8 @@ func FeedVideoDao(userId int) ([]dto.Video, error) {
 	return dtoVideos, nil
 }
 
+//
+
 func bindVideoDaoToDto(video model.Video, user dto.User) dto.Video {
 	var videoInfo dto.Video
 	videoInfo.Id = video.Id
