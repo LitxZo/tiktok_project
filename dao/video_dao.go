@@ -27,6 +27,12 @@ func FeedVideoDao(userId int) ([]dto.Video, error) {
 		if err2 := global.DB.Table(followRecord.GetTableName()).Where("user_id = ? AND follow_id = ? AND deleted_at IS NULL", userId, v.AuthorId).Find(&followRecord).Error; err2 != nil || followRecord.Id == 0 {
 			isFollow = false
 		}
+		var FavoriteRecord model.FavoriteRecord
+		var isFavorite bool = true
+		if err2 := global.DB.Table(FavoriteRecord.GetTableName()).Where("user_id = ? AND video_id = ? AND deleted_at IS NULL", userId, v.Id).Find(&FavoriteRecord).Error; err2 != nil || FavoriteRecord.Id == 0 {
+			isFavorite = false
+		}
+		v.IsFavorite = isFavorite
 
 		dtoVideos = append(dtoVideos, bindVideoDaoToDto(v, bindUserDaoToDto(user, isFollow)))
 	}

@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"tiktok_project/service"
@@ -49,8 +48,7 @@ func (f FavoriteApi) FavoriteAction(ctx *gin.Context) {
 		ActionType: strActionType,
 	}
 	// 2. 进行token校验
-	fmt.Println(likeReq)
-	fmt.Println("test01")
+
 	// @return err
 	userId, err := service.FavoriteActionTokenService(likeReq.Token)
 	if err != nil {
@@ -89,12 +87,26 @@ func (f FavoriteApi) FavoriteAction(ctx *gin.Context) {
 func (f FavoriteApi) GetFavoriteList(ctx *gin.Context) {
 	// 1.获取参数
 	// user_id  token
-	var req dto.DouyinFavoriteListRequest
-	err := ctx.ShouldBindQuery(&req)
-	if err != nil {
-		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "1"))
+	TokenStr, ok1 := ctx.GetQuery("token")
+	if !ok1 {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(nil, " InvalidParam error"))
 		return
 	}
+	userIDStr, ok2 := ctx.GetQuery("user_id")
+	if !ok2 {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(nil, " InvalidParam error"))
+		return
+	}
+	userId, err := strconv.ParseInt(userIDStr, 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, ""))
+		return
+	}
+	req := dto.DouyinFavoriteListRequest{
+		UserId: userId,
+		Token:  TokenStr,
+	}
+
 	// 2.进行token校验
 	_, err2 := service.FavoriteActionTokenService(req.Token)
 	if err2 != nil {
@@ -105,13 +117,19 @@ func (f FavoriteApi) GetFavoriteList(ctx *gin.Context) {
 	//var rsp dto.DouyinFavoriteListResponse
 	// 传入指针类型数据 进行修改
 	// 如果不成功 返回 一个err
+
 	var v1 []dto.Video
-	v1, err = service.FavoriteListService(int(req.UserId))
-	if err != nil {
+	var err4 error
+	v1, err4 = service.FavoriteListService(int(req.UserId))
+	if err4 != nil {
 		// 查询出现问题
 		//
+		ctx.JSON(http.StatusOK, gin.H{
+			"status_code": "1",
+			"status_msg":  "string",
+			"video_list":  "",
+		})
 	}
-	fmt.Println(v1)
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"status_code": "0",
