@@ -24,25 +24,32 @@ type DouyinPublishActionResponse struct {
 }
 
 type DouyinPublishListRequest struct {
-	UserId int    `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"` // 用户id
+	UserId string `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"` // 用户id
 	Token  string `protobuf:"bytes,2,req,name=token" json:"token,omitempty"`                  // 用户鉴权token
 }
 
 type DouyinPublishListResponse struct {
-	StatusCode int      `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string   `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`     // 返回状态描述
-	VideoList  []*Video `protobuf:"bytes,3,rep,name=video_list,json=videoList" json:"video_list,omitempty"`     // 用户发布的视频列表
+	StatusCode int     `protobuf:"varint,1,req,name=status_code,json=statusCode" json:"status_code,omitempty"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string  `protobuf:"bytes,2,opt,name=status_msg,json=statusMsg" json:"status_msg,omitempty"`     // 返回状态描述
+	VideoList  []Video `protobuf:"bytes,3,rep,name=video_list,json=videoList" json:"video_list,omitempty"`     // 用户发布的视频列表
 }
 
 func GenerateFeedResponse(videos []Video) (DouyinFeedResponse, error) {
-	respVideos := []Video{}
-	respVideos = append(respVideos, videos...)
 
 	resp := DouyinFeedResponse{
 		StatusCode: 0,
 		StatusMsg:  "Feed Success",
-		VideoList:  respVideos,
+		VideoList:  videos,
 	}
 
+	return resp, nil
+}
+
+func GeneratePublishList(videos []Video) (DouyinPublishListResponse, error) {
+	resp := DouyinPublishListResponse{
+		StatusCode: 0,
+		StatusMsg:  "Publish List Load Success",
+		VideoList:  videos,
+	}
 	return resp, nil
 }

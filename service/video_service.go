@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"strconv"
 	"tiktok_project/dao"
 	"tiktok_project/service/dto"
 	"tiktok_project/utils"
@@ -29,6 +30,17 @@ func VideoPublish(fileUrl, token, title string) error {
 	return nil
 }
 
-func VideoPublishList(id int) {
-
+func VideoPublishList(userId, token string) ([]dto.Video, error) {
+	tokenId, err := utils.ParseTokenForId(token)
+	if err != nil {
+		return nil, err
+	}
+	id, err1 := strconv.Atoi(userId)
+	if err1 != nil {
+		return nil, err1
+	}
+	if userId == "0" {
+		return dao.VideoPublishListDao(tokenId)
+	}
+	return dao.VideoPublishListDao(id)
 }

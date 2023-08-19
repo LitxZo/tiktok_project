@@ -8,7 +8,6 @@ import (
 	"strconv"
 	"tiktok_project/service"
 	"tiktok_project/service/dto"
-	"tiktok_project/utils"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -101,14 +100,16 @@ func (m VideoApi) PublishList(ctx *gin.Context) {
 		return
 	}
 
-	if utils.TokenIsValid(req.Token) {
-		err2 := errors.New("token Invalid")
+	videos, err2 := service.VideoPublishList(req.UserId, req.Token)
+	if err2 != nil {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err2, "Get Publish Video List"))
 		return
 	}
-	// videos, err3 := service.VideoPublishList(req.UserId)
-	// if err3 != nil {
-	// 	ctx.JSON(http.StatusOK, dto.ErrResponse(err3, "Get Publish Video List"))
-	// 	return
-	// }
+
+	resp, err3 := dto.GeneratePublishList(videos)
+	if err3 != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err3, "Get Publish Video List"))
+		return
+	}
+	ctx.JSON(http.StatusOK, resp)
 }
