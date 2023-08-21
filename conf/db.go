@@ -25,5 +25,6 @@ func InitDB() (*gorm.DB, error) {
 	db.AutoMigrate(&model.FollowRecord{})
 	db.AutoMigrate(&model.Message{})
 	db.AutoMigrate(&model.FavoriteRecord{})
+	db.AutoMigrate(&model.Comment{})
 	return db, nil
 }

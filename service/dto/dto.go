@@ -36,6 +36,16 @@ type Message struct {
 	CreateTime int64  `protobuf:"bytes,5,opt,name=create_time,json=createTime" json:"create_time,omitempty"` // 消息创建时间
 }
 
+type Comment struct {
+	Id         int    `protobuf:"varint,1,req,name=id" json:"id,omitempty"`          // 评论id
+	Content    string `protobuf:"bytes,2,req,name=content" json:"content,omitempty"` //评论内容
+	User       User   `gorm:"foreignKey:Id;references:UserId"`
+	UserId     int    `protobuf:"varint,3,req,name=user_id" json:"user_id"` // 用户id
+	Video      Video  `gorm:"foreignKey:Id;references:VideoId"`
+	VideoId    int    `protobuf:"varint,4,req,name=video_id" json:"video_id"`                                // 视频id                      // 消息内容
+	CreateDate int64  `protobuf:"bytes,5,opt,name=create_date,json=createDate" json:"create_date,omitempty"` // 评论创建时间
+}
+
 func ErrResponse(err error, context string) gin.H {
 	return gin.H{
 		"status_code": 1,
