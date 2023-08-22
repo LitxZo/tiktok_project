@@ -6,6 +6,8 @@ import (
 	"tiktok_project/global"
 	"tiktok_project/model"
 	"tiktok_project/service/dto"
+
+	"github.com/spf13/viper"
 )
 
 func UserRegisterDao(username, password string) (int, error) {
@@ -57,11 +59,12 @@ func UserInfoDao(userId string, tokenId int) (dto.User, error) {
 }
 
 func bindUserDaoToDto(user model.User, isFollow bool) dto.User {
+	url := "http://" + viper.GetString("Server.ipAddress") + ":" + viper.GetString("Server.port")
 	var userInfo dto.User
 	userInfo.Id = user.Id
 	userInfo.Name = user.Name
 	userInfo.Avatar = user.Avatar
-	userInfo.BackgroundImage = user.BackgroundImage
+	userInfo.BackgroundImage = url + "/static/test.jpg"
 	userInfo.FavoriteCount = user.FavoriteCount
 	userInfo.FollowCount = user.FollowCount
 	userInfo.FollowerCount = user.FollowerCount

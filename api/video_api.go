@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"tiktok_project/service"
 	"tiktok_project/service/dto"
+	"tiktok_project/utils"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -83,8 +84,16 @@ func (m VideoApi) PublishVideo(ctx *gin.Context) {
 	fileUrl := viper.GetString("Server.staticUrl") + "/" + "video" + "/" + fileName
 	// 保存文件
 	ctx.SaveUploadedFile(file, filePath)
+
+	coverName := strconv.FormatInt(time.Now().Unix(), 10) + title + ".jpg"
+	coverUrl, err := utils.GetCover(filePath, coverName, 5)
+	if err != nil {
+		ctx.JSON(http.StatusOK, dto.ErrResponse(err, "Publish Video"))
+		fmt.Println(err.Error())
+		return
+	}
 	// 调用发布视频服务
-	err3 := service.VideoPublish(fileUrl, token, title)
+	err3 := service.VideoPublish(fileUrl, token, title, coverUrl)
 	if err3 != nil {
 		ctx.JSON(http.StatusOK, dto.ErrResponse(err3, "Publish Video"))
 		return

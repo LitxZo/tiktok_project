@@ -22,8 +22,8 @@ func FeedVideoService(token string) ([]dto.Video, error) {
 	return videos, nil
 }
 
-func VideoPublish(fileUrl, token, title string) error {
-	err := dao.VideoPublishDao(fileUrl, token, title)
+func VideoPublish(fileUrl, token, title, coverUrl string) error {
+	err := dao.VideoPublishDao(fileUrl, token, title, coverUrl)
 	if err != nil {
 		return err
 	}

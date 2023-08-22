@@ -18,6 +18,6 @@ type DouyinFavoriteListResponse struct {
 }
 
 type DouyinFavoriteListRequest struct {
-	UserId int64  `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty" binding:"required"'` // 用户id
-	Token  string `protobuf:"bytes,2,req,name=token" json:"token,omitempty" binding:"required"`                   // 用户鉴权token
+	UserId int64  `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty" binding:"required"` // 用户id
+	Token  string `protobuf:"bytes,2,req,name=token" json:"token,omitempty" binding:"required"`                  // 用户鉴权token
 }

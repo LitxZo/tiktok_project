@@ -1,11 +1,13 @@
 package dao
 
 import (
+	"errors"
 	"tiktok_project/global"
 	"tiktok_project/model"
 	"tiktok_project/service/dto"
 	"tiktok_project/utils"
 
+	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
@@ -42,11 +44,12 @@ func FeedVideoDao(userId int) ([]dto.Video, error) {
 //
 
 func bindVideoDaoToDto(video model.Video, user dto.User) dto.Video {
+	url := "http://" + viper.GetString("Server.ipAddress") + ":" + viper.GetString("Server.port")
 	var videoInfo dto.Video
 	videoInfo.Id = video.Id
 	videoInfo.Author = user
-	videoInfo.PlayUrl = video.PlayUrl
-	videoInfo.CoverUrl = video.CoverUrl
+	videoInfo.PlayUrl = url + video.PlayUrl
+	videoInfo.CoverUrl = url + video.CoverUrl
 	videoInfo.FavoriteCount = video.FavoriteCount
 	videoInfo.CommentCount = video.CommentCount
 	videoInfo.IsFavorite = video.IsFavorite
@@ -54,8 +57,9 @@ func bindVideoDaoToDto(video model.Video, user dto.User) dto.Video {
 	return videoInfo
 }
 
-func VideoPublishDao(fileUrl, token, title string) error {
+func VideoPublishDao(fileUrl, token, title, coverUrl string) error {
 	claim, tokenErr := utils.ParseToken(token)
+	tx := global.DB.Begin()
 	// var user model.User
 	var authorId int
 	if tokenErr != nil {
@@ -71,10 +75,21 @@ func VideoPublishDao(fileUrl, token, title string) error {
 		PlayUrl:  fileUrl,
 		Title:    title,
 		AuthorId: authorId,
+		CoverUrl: coverUrl,
 	}).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
-		return err
+		tx.Rollback()
+		return errors.New("上传视频失败" + err.Error())
 	}
+	if authorId != 0 {
+		var user model.User
+		if err := global.DB.Table(user.GetTableName()).Where("id = ?", authorId).UpdateColumn("work_count", gorm.Expr("work_count + ?", 1)).Error; err != nil {
+			// 回滚事务
+			tx.Rollback()
+			return errors.New("上传视频失败" + err.Error())
+		}
+	}
+
 	return nil
 }
 

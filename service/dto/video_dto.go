@@ -24,8 +24,8 @@ type DouyinPublishActionResponse struct {
 }
 
 type DouyinPublishListRequest struct {
-	UserId string `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty"` // 用户id
-	Token  string `protobuf:"bytes,2,req,name=token" json:"token,omitempty"`                  // 用户鉴权token
+	UserId string `protobuf:"varint,1,req,name=user_id,json=userId" json:"user_id,omitempty" form:"user_id"` // 用户id
+	Token  string `protobuf:"bytes,2,req,name=token" json:"token,omitempty" form:"token"`                    // 用户鉴权token
 }
 
 type DouyinPublishListResponse struct {

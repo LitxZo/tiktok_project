@@ -1,7 +1,6 @@
 package router
 
 import (
-	"net/http"
 	"tiktok_project/api"
 
 	"github.com/gin-gonic/gin"
@@ -22,11 +21,7 @@ func InitCoreRouter() {
 		userGroup.POST("/login/", userApi.UserLogin)
 		publishGroup := rg.Group("/publish")
 		publishGroup.POST("/action/", videoApi.PublishVideo)
-		publishGroup.GET("/list/", func(ctx *gin.Context) {
-			ctx.JSON(http.StatusAccepted, gin.H{
-				"msg": "publishList success",
-			})
-		})
+		publishGroup.GET("/list/", videoApi.PublishList)
 		relationGroup := rg.Group("/relation")
 		relationGroup.POST("/action/", relationApi.RelationAction)
 		relationGroup.GET("/follow/list/", relationApi.FollowList)
