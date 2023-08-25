@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
 	"tiktok_project/service"
@@ -70,7 +69,7 @@ func (f CommentApi) GetCommentList(ctx *gin.Context) {
 		return
 	}
 	resp := dto.DouyinCommentListResponse(commentList)
-	fmt.Println(resp)
+
 	ctx.JSON(http.StatusOK, resp)
 
 }
