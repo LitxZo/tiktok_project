@@ -7,6 +7,7 @@ import (
 	"tiktok_project/global"
 	"tiktok_project/model"
 	"tiktok_project/service/dto"
+	"tiktok_project/utils"
 	"time"
 )
 
@@ -16,28 +17,39 @@ const (
 )
 
 // 评论和删除评论
-func CommentActionService(req dto.CommentActionRequest) (*dto.CommentActionResponse, error) {
+func CommentActionService(req dto.CommentActionRequest) (commentFail dto.CommentActionResponse, err error) {
 
 	actionType := req.ActionType
 	videoId, _ := strconv.Atoi(req.VideoId)
-	userId, _ := strconv.Atoi(req.UserId)
-	if actionType == createComment {
-		if err := comment(req.CommentText, userId, videoId); err != nil {
-			return nil, err
-		}
-	} else if actionType == delComment {
-		if err := deleteComment(req.CommentId, videoId); err != nil {
-			return nil, err
-		}
-	}
+	userId, _ := utils.ParseTokenForId(req.Token)
 	commentId, _ := strconv.Atoi(req.CommentId)
-	commentInfo := dto.Comment{
-		Id:      commentId,
-		Content: req.CommentText,
-	}
-	commentFail := dto.DouyinCommentActionResponse(commentInfo)
+	var commentText, createData string
+	if actionType == createComment {
+		commentId, commentText, createData, err = comment(req.CommentText, userId, videoId)
+		if err != nil {
+			return
+		}
+		var user dto.User
+		user, err = dao.SearchUserById(userId)
+		if err != nil {
+			return
+		}
+		commentInfo := dto.Comment{
+			Id:         commentId,
+			Content:    commentText,
+			User:       user,
+			CreateDate: createData,
+		}
+		commentFail = dto.DouyinCommentActionResponse(commentInfo)
 
-	return &commentFail, nil
+		return commentFail, nil
+	} else if actionType == delComment {
+
+		if err = deleteComment(commentId, videoId); err != nil {
+			return
+		}
+	}
+	return
 }
 
 // 评论列表
@@ -47,7 +59,7 @@ func CommentListService(videoId int) (commentList []dto.Comment, count int64, er
 }
 
 // 新增评论
-func comment(text string, userId int, videoId int) (err error) {
+func comment(text string, userId int, videoId int) (id int, commentText string, creatData string, err error) {
 	//新增评论
 	comment := model.Comment{
 		Content:    text,
@@ -58,35 +70,33 @@ func comment(text string, userId int, videoId int) (err error) {
 	tx := global.DB.Begin()
 	err = global.DB.Create(&comment).Error
 	if err != nil {
-		errors.New("插入评论信息失败")
 		tx.Rollback()
 		return
 	}
 	err = dao.UpdateCommentAdd(int(videoId))
 	if err != nil {
-		errors.New("修改评论数失败")
 		tx.Rollback()
 		return
 	}
 	tx.Commit()
-	return nil
+	return comment.Id, comment.Content, comment.CreateDate, nil
 }
 
 // 删除评论
-func deleteComment(commentId string, videoId int) (err error) {
+func deleteComment(commentId int, videoId int) (err error) {
 	tx := global.DB.Begin()
 	err = dao.DeleteComment(commentId)
 	if err != nil {
-		errors.New("删除评论信息失败")
+
 		tx.Rollback()
-		return
+		return errors.New("删除评论信息失败")
 	}
 	//video的comment_count-1
 	err = dao.UpdateCommentDel(videoId)
 	if err != nil {
-		errors.New("修改评论信息失败")
+
 		tx.Rollback()
-		return
+		return errors.New("修改评论信息失败")
 	}
 	tx.Commit()
 	return nil

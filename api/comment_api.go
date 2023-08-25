@@ -41,7 +41,6 @@ func (f CommentApi) CommentAction(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, dto.ErrResponseS(err, "Get CommentAction Error"))
 		return
 	}
-	fmt.Println(resp)
 	ctx.JSON(http.StatusOK, resp)
 }
 

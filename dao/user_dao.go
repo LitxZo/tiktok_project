@@ -77,7 +77,7 @@ func bindUserDaoToDto(user model.User, isFollow bool) dto.User {
 
 func SearchUserById(id int) (dto.User, error) {
 	var user model.User
-	err := global.DB.Table(user.GetTableName()).Where("user_id = ?", id).First(&user).Error
+	err := global.DB.Table(user.GetTableName()).Where("id = ?", id).First(&user).Error
 	if err != nil {
 		return dto.User{}, err
 	}

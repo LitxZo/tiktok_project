@@ -46,7 +46,7 @@ type Comment struct {
 	Id         int    `protobuf:"varint,1,req,name=id" json:"id,omitempty"`                        // 视频评论id
 	Content    string `protobuf:"bytes,3,req,name=content" json:"content,omitempty"`               // 评论内容
 	CreateDate string `protobuf:"bytes,4,req,name=create_date,json=createDate" json:"create_date"` // 评论发布日期，格式 mm-dd
-	User       User   `gorm:"foreignKey:Id;referances:User"`
+	User       User   `gorm:"foreignKey:Id;referances:UserId"`
 	UserId     int    `json:"user_id"` // 评论人id
 	Video      Video  `gorm:"foreignKey:Id;referances:VideoId"`
 	VideoId    int    `json:"video_id"` // 视频id
