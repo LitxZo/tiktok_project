@@ -22,7 +22,8 @@ func MessageChat(req dto.DouyinMessageChatRequest) ([]dto.Message, error) {
 	if err != nil {
 		return nil, err
 	}
-	messages, err := dao.MessageChatDao(claim.ID, id)
+	preTime := req.PreMsgTime
+	messages, err := dao.MessageChatDao(claim.ID, id, preTime)
 	if err != nil {
 		return make([]dto.Message, 0), err
 	}

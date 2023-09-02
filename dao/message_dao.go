@@ -6,9 +6,9 @@ import (
 	"tiktok_project/service/dto"
 )
 
-func MessageChatDao(FromUserId int, ToUserId int) ([]dto.Message, error) {
+func MessageChatDao(FromUserId int, ToUserId int, preTime int64) ([]dto.Message, error) {
 	var ids []int64
-	result := global.DB.Table(model.Message{}.GetTableName()).Where("from_user_id = ? AND to_user_id = ? AND deleted_at IS NULL", FromUserId, ToUserId).Or("from_user_id = ? AND to_user_id = ? AND deleted_at IS NULL", ToUserId, FromUserId).Select("id").Find(&ids)
+	result := global.DB.Table(model.Message{}.GetTableName()).Where("from_user_id = ? AND to_user_id = ? AND deleted_at IS NULL AND create_time > ? ", FromUserId, ToUserId, preTime).Or("from_user_id = ? AND to_user_id = ? AND deleted_at IS NULL AND create_time > ?", ToUserId, FromUserId, preTime).Select("id").Find(&ids)
 	if result.Error != nil {
 		return nil, result.Error
 	}
